@@ -1,0 +1,34 @@
+/productAdd
+    params: name, description, fulfillmentCode
+    returns: productId
+
+/offerAdd
+    params: productId, price, description,
+    returns: offerId
+
+/projectAdd
+    params: projectId, name, intro
+
+/productRemove
+
+/offerRemove
+
+/projectRemove
+
+/projectAssignOffer
+    params: projectId, offerId,
+
+/projectGet
+    params: projectId,
+    returns: project object with offers
+
+/productUpdate
+    params: productId, name, description, fulfillmentCode
+
+/offerUpdate
+    params: offerId, price, description
+
+/projectUpdate
+    params: projectId, name, intro
+
+
