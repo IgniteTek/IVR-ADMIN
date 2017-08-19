@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <meta charset="utf-8" />
+  <title>LucidVueCX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta content="" name="description" />
+  <meta content="" name="author" />
+  <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link href="/bower_components/bootstrapvalidator/dist/css/bootstrapValidator.min.css" rel="stylesheet" type="text/css" />
+  <link class="main-stylesheet" href="/content/styles/pages.css" rel="stylesheet" type="text/css" />
+  <script src="/bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
+  <script src="/bower_components/bootstrapvalidator/dist/js/bootstrapValidator.min.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fixed-header">
+  <div class="page-container ">
+    <!-- START HEADER -->
+    <div class="header " style="height:130px;text-align: center; ">
+      <img src="/content/images/logo.png" style="padding-top: 44px;">
+    </div>
+    <!-- END HEADER -->
+    <!-- START PAGE CONTENT WRAPPER -->
+    <div class="page-content-wrapper ">
+      <!-- START PAGE CONTENT -->
+      <div class="content ">
+        <!-- START JUMBOTRON -->
+        <!-- START CONTAINER FLUID -->
+        <div class="container-fluid container-fixed-lg" style="margin-top:100px;">
+          <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-8">
+              <!-- START PANEL -->
+              <div class="panel panel-transparent">
+                <div class="panel-heading">
+                  <div class="panel-title">Your Account has been created
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <h3>Your account has been setup and you will now be able to login </h3>
+                  <h4>In order to get started, you will want to upload some audio files. This can be done by accessing the Upload Menu in the upper right corner of the screen.</h4>
+                  <h5>Please note the following:</h5>
+                  <ul>
+                    <li><strong>PCI Compliance:</strong> If your audio files require a PCI compliant environment,Lucid CX has a specific solution to meet this demand. For PCI compliant implementations, files can be transferred to Lucid CX via Amazon S3 API,
+                      using credentials Ignite will provide to our PCI certified S3 environment. Lucid CX will strip PCI sensitive data from both audio and transcription data before the data available through the Lucid portal. The original audio file
+                      provided by your system is removed from our S3 environment once file processing is complete. </li>
+                    <li><strong>Audio format and quality considerations:</strong> Lucid CX’s speech recognition engine supports multiple audio file formats, including wav, mp3 and vox. However, audio files with high compression can reduce speech recognition
+                      accuracy. For best performance we recommend not compressing the audio to less than 96 kbps.
+                    </li>
+                  </ul>
+                  <h4>LucidVueCX allows you to track and pinpoint keywords inside your inbound calls. Add or remove the keywords you would like to track inside the LucidVueCX dashboard. This can be accomplished by clicking on Edit Keywords from the menu in
+                    the top right corner.</h4>
+                  <h4>After you upload your audio file, the system will convert them into text using our advanced speech recognition engine. The conversion process is variable depending on the number and length of files that you have uploaded. However, you
+                    can start to see results immediately. You can refresh the data by clicking the Refresh Query button in the View Contacts panel. We will e-mail you when the process is complete. This usually takes anywhere from one hour to a day.</h4>
+                    <h4>Have questions? Email us at info@ignite-tek.com.</h4>
+                    <br>
+                  <div class="row">
+                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-4">
+                      <a href="/login"><button class="btn btn-complete btn-cons pull-right">Login to your Dashboard</button></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid container-fixed-lg footer">
+            <div class="copyright sm-text-center">
+              <p class="small no-margin pull-left sm-pull-reset">
+                <span class="hint-text">Copyright &copy; 2017 </span>
+                <span class="font-montserrat">Ignite-TEK</span>.
+                <span class="hint-text">All rights reserved. </span>
+
+              </p>
+              <div class="clearfix"></div>
+            </div>
+          </div>
+          <!-- END COPYRIGHT -->
+        </div>
+        <!-- END PAGE CONTENT WRAPPER -->
+      </div>
+    </div>
+</body>
+
+</html>
