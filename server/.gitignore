@@ -1,0 +1,10 @@
+node_modules
+bin/.env
+dist
+.tmp
+.sass-cache
+bower_components
+*npm-debug.log
+.DS_Store
+Server.njsproj
+word2vec

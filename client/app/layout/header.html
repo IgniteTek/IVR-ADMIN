@@ -1,0 +1,251 @@
+<!-- BEGIN HEADER INNER -->
+<div ng-controller="HeaderController" class="page-header-inner">
+    <div class="page-header">
+        <!-- BEGIN HEADER TOP -->
+        <div class="page-header-top">
+            <div class="container">
+                <!-- BEGIN LOGO -->
+                <div class="page-logo">
+                    <a ng-click="reload()">
+                        <img style="width:{{authservice.userSessionData.logowidth}}px" ng-src="{{authservice.userSessionData.logo}}" class="logo-default" />
+                    </a>
+                </div>
+                <!-- END LOGO -->
+                <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+                <a href="javascript:;" class="menu-toggler"></a>
+                <!-- END RESPONSIVE MENU TOGGLER -->
+                <style type="text/css">
+                    .tdetails {
+                        border-right: 1px white solid;
+                    }
+
+                    .tnumber {
+                        padding-top: 5px;
+                        text-align: center;
+                        width: 120px;
+                        font-size: 32px;
+                        line-height: 33px;
+                        letter-spacing: -1px;
+                        margin-bottom: 0px;
+                        font-weight: 300;
+                        color: #fff;
+                    }
+
+                    .bnumber {
+                        text-align: center;
+                        width: 120px;
+                        font-size: 12px;
+                        letter-spacing: 0px;
+                        font-weight: 300;
+                        margin-top: 3px;
+                        color: #fff;
+                    }
+                </style>
+                <!-- BEGIN TOP NAVIGATION MENU -->
+                <div class="top-menu">
+                    <ul class="nav navbar-nav pull-right">
+                        <!-- BEGIN NOTIFICATION DROPDOWN -->
+                        <li class="dropdown dropdown-quick-sidebar-toggler hide">
+                            <a href="" class="dropdown-toggle">
+                                <i class="icon-user-following"></i>
+                            </a>
+                        </li>
+                        <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                        <li class="hide dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                            <a href="" class="dropdown-toggle" data-hover="dropdown" dropdown-menu-hover="" data-close-others="true">
+                                <i class="icon-bell"></i>
+                                <span class="badge badge-default">7</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="external">
+                                    <h3>
+                                    <span class="bold">12 pending</span>notifications</h3>
+                                    <a href="extra_profile.html">view all</a>
+                                </li>
+                                <li>
+                                    <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
+                                        <li>
+                                            <a href="javascript:;">
+                                                <span class="time">just now</span>
+                                                <span class="details">
+                                                <span class="label label-sm label-icon label-success">
+                                                    <i class="fa fa-plus"></i>
+                                                </span>New user registered.</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <span class="time">3 mins</span>
+                                                <span class="details">
+                                                <span class="label label-sm label-icon label-danger">
+                                                    <i class="fa fa-bolt"></i>
+                                                </span>Server #12 overloaded.</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <span class="time">10 mins</span>
+                                                <span class="details">
+                                                <span class="label label-sm label-icon label-warning">
+                                                    <i class="fa fa-bell-o"></i>
+                                                </span>Server #2 not responding.</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <span class="time">14 hrs</span>
+                                                <span class="details">
+                                                <span class="label label-sm label-icon label-info">
+                                                    <i class="fa fa-bullhorn"></i>
+                                                </span>Application error.</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <span class="time">2 days</span>
+                                                <span class="details">
+                                                <span class="label label-sm label-icon label-danger">
+                                                    <i class="fa fa-bolt"></i>
+                                                </span>Database overloaded 68%.</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <span class="time">3 days</span>
+                                                <span class="details">
+                                                <span class="label label-sm label-icon label-danger">
+                                                    <i class="fa fa-bolt"></i>
+                                                </span>A user IP blocked.</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <span class="time">4 days</span>
+                                                <span class="details">
+                                                <span class="label label-sm label-icon label-warning">
+                                                    <i class="fa fa-bell-o"></i>
+                                                </span>Storage Server #4 not responding dfdfdfd.</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <span class="time">5 days</span>
+                                                <span class="details">
+                                                <span class="label label-sm label-icon label-info">
+                                                    <i class="fa fa-bullhorn"></i>
+                                                </span>System Error.</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <span class="time">9 days</span>
+                                                <span class="details">
+                                                <span class="label label-sm label-icon label-danger">
+                                                    <i class="fa fa-bolt"></i>
+                                                </span>Storage server failed.</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- END NOTIFICATION DROPDOWN -->
+                        <!-- BEGIN LANGUAGE BAR -->
+                        <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                        <!-- END LANGUAGE BAR -->
+                        <!-- BEGIN USER LOGIN DROPDOWN -->
+                        <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                        <li ng-mouseenter="menuShow()" ng-mouseleave="menuHide()" ng-show="authservice.isAuthenticated()" style="z-index:9999" class="dropdown dropdown-user">
+                            <a href="" class="dropdown-toggle">
+                                <img alt="" class="img-circle" src="content/images/avatar.png" />
+                                <span class="username username-hide-on-mobile">{{authservice.userSessionData.name}}</span>
+                                <i ng-click="menuToggle()" id="menu_tick" class="fa fa-angle-down"></i>
+                            </a>
+                            <ul id="drop_menu" ng-class="authservice.settings.newaccount?'show':''" class="dropdown-menu dropdown-menu-default {{menu_class}}">
+                                <li class="hide">
+                                    <a href="#/profile/dashboard">
+                                        <i class="icon-user"></i>My Profile</a>
+                                </li>
+                                <li class="hide">
+                                    <a href="">
+                                        <i class="icon-calendar"></i>My Calendar</a>
+                                </li>
+                                <li class="" ng-show="authservice.userSessionData.userid == 90">
+                                    <a href="alert">
+                                        <i class="fa fa-bullhorn"></i>Alerts
+                                        <span style="margin-top:8px" class="badge badge-danger">1</span></a>
+                                </li>
+                                <li class="">
+                                    <a href="dashboard">
+                                        <i class="fa fa-tachometer"></i>Dashboard</a>
+                                </li>
+                                <li class="">
+                                    <a href="trends">
+                                        <i class="fa fa-signal"></i>Trends</a>
+                                </li>
+                                <li class="" ng-show="authservice.userSessionData.userid!=62">
+                                    <a href="reporting">
+                                        <i class="fa fa-bar-chart"></i>Reports</a>
+                                </li>
+                                <li class="">
+                                    <a ng-click="clearSearch()" href="search" ng-show="authservice.permission.searchScreen==='true'">
+                                        <i class="fa fa-search"></i>Search</a>
+                                </li>
+                                <li class="">
+                                    <a ng-click="" href="visualize" ng-show="authservice.permission.searchScreen==='true'">
+                                        <i class="fa fa-search"></i>Visualize</a>
+                                </li>
+                                <li class="" ng-show="authservice.userSessionData.accountid==9">
+                                    <a href="turk">
+                                        <i class="fa fa-amazon"></i>Turk</a>
+                                </li>
+                                <li class="" ng-mouseover="status.isview = true" ng-mouseleave="status.isview = false" >
+                                    <a >
+                                        <i class="fa fa-eye"></i>View</a>
+                                    <ul style="list-style:none" ng-show="status.isview">
+                                        <li class="" ng-click="authservice.settings.istrends=authservice.settings.istrends?false:true">
+                                              <i  ng-class="authservice.settings.istrends?'fa-check':'fa-times'" class="fa"></i>Trends</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="divider"></li>
+                                <li tooltip-class="newaccountBallon" tooltip-trigger="'none'" tooltip-is-open="authservice.settings.newaccount_s==2"  tooltip-placement="top" uib-tooltip="After you upload your audio files, add, edit, and remove your keyword and phrases that you want to report on. "class="">
+                                    <a href="keyword">
+                                        <i class="fa fa-wrench"></i>Edit Keywords</a>
+                                </li>
+                                <li class="" ng-show="authservice.userSessionData.userid == 90">
+                                    <a href="social">
+                                        <i class="fa fa-connectdevelop"></i>Add Social</a>
+                                </li>
+                                <li class="" >
+                                    <a href="upload" tooltip-class="newaccountBallon" tooltip-trigger="'none'" tooltip-is-open="authservice.settings.newaccount_s==1"  tooltip-placement="top" uib-tooltip="Click this button to upload your audio files. After you upload them, they will be processed and you can review your results.">
+                                        <i  class="fa fa-upload"></i>Upload Files</a>
+                                </li>
+                                <li class="" ng-show="authservice.permission.changeKeywords==='true'">
+                                    <a href="login#change_password">
+                                        <i class="fa fa-lock"></i>Change Password</a>
+                                </li>
+                                <li ng-click="logout()">
+                                    <a href="">
+                                        <i class="fa fa-key"></i>Log Out</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- END USER LOGIN DROPDOWN -->
+                        <!-- BEGIN QUICK SIDEBAR TOGGLER -->
+                        <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                        <li class="dropdown dropdown-quick-sidebar-toggler hide">
+                            <a href="javascript:;" class="dropdown-toggle">
+                                <i class="icon-logout"></i>
+                            </a>
+                        </li>
+                        <!-- END QUICK SIDEBAR TOGGLER -->
+                    </ul>
+                </div>
+                <!-- END TOP NAVIGATION MENU -->
+            </div>
+        </div>
+        <!-- END HEADER TOP -->
+    </div>
+    <!-- END HEADER -->
+</div>

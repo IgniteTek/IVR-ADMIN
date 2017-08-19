@@ -9,28 +9,20 @@
         .module('app.core', [
 
         //blocks
-            'blocks.authservice', 'blocks.services', 'blocks.dashservice', 'blocks.reportingservice', 'blocks.turkservice', 'blocks.transcriptservice',
-
+            'blocks.authservice', 'blocks.services',
         //ng
             'ngCookies', 'ngMessages',
             'ngResource', 'ngRoute', 'ngSanitize',
             'ui.router', 'angular.filter',
-            'xeditable','rzModule',
+            'xeditable',
 
         //other
             'oc.lazyLoad', 'agGrid','ui.bootstrap'
         ])
     /* Setup App Main Controller */
-        .controller('MainController', ['$scope', '$rootScope', 'authservice', 'toastr', '$http', 'reportingservice',
-        function($scope, $rootScope, authservice, toastr, $http, reportingservice) {
+        .controller('MainController', ['$scope', '$rootScope', 'authservice', 'toastr', '$http',
+        function($scope, $rootScope, authservice, toastr, $http) {
             $scope.$on('$viewContentLoaded', function() {});
-            if (authservice.userSessionData.defaultDateRange == undefined) {
-                reportingservice.reportStartDate = moment().subtract(90, 'days');
-                reportingservice.reportEndDate = moment();
-            } else {
-                reportingservice.reportStartDate = moment(Date.parse(authservice.userSessionData.defaultDateRange.split(',')[0]));
-                reportingservice.reportEndDate = moment(Date.parse(authservice.userSessionData.defaultDateRange.split(',')[1]));
-            }
             $scope.redirectToLogin = function() {
                 var userid = authservice.userSessionData.userid;
                 if (!userid) {
@@ -49,10 +41,7 @@
                     preventDuplicates: true,
                     preventOpenDuplicates: true
                 });
-
-
-
-                $rootScope.timeout = true;
+        $rootScope.timeout = true;
                 authservice.logout();
             };
 
@@ -80,9 +69,9 @@
     }
 
 
-    runBlock.$inject = ['$rootScope', 'settings', '$state', 'authservice', '$location', '$window', 'editableOptions'];
+    runBlock.$inject = ['$rootScope', 'settings', '$state', 'authservice', '$location', '$window'];
 
-    function runBlock($rootScope, settings, $state, authservice, $location, $window, editableOptions) {
+    function runBlock($rootScope, settings, $state, authservice, $location, $window) {
         $rootScope.$state = $state; // state to be accessed from view
         $rootScope.settings = settings;
         $rootScope.timeout = false;
@@ -95,27 +84,11 @@
         if (!authservice.reConnect()) {
             $location.path('/login');
         }
-        editableOptions.theme = 'bs3';
-        var queryString = $location.search();
-        if (queryString.transferGUID != undefined) {
-            $rootScope.settings.transferGUID = queryString.transferGUID;
-        }
-        var windowElement = angular.element($window);
         document.title = 'Lucid CX';
-        windowElement.on('beforeunload', function(event) {
-            if (!$rootScope.timeout) {
-                // the following line of code will prevent reload or navigating away.
-
-                //  event.preventDefault();
-                // return "Are you sure?";
-            }
-        });
         $rootScope.$on('$locationChangeStart', function(event, newUrl, oldUrl) {
-            //    console.info(authservice.isAuthenticated());
             if (!authservice.reConnect()) {
                 $location.path('/login');
             }
-            //  console.info(newUrl + '  ' + oldUrl);
         });
     }
 

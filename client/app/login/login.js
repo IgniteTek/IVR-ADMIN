@@ -2,8 +2,8 @@
 'use strict';
 
 angular.module('app')
-  .controller('LoginCtrl', ['$rootScope', '$cookies', '$scope', '$http', '$timeout', '$location', 'authservice', 'toastr', 'reportingservice', '$window',
-    function($rootScope, $cookies, $scope, $http, $timeout, $location, authservice, toastr, reportingservice, $window) {
+  .controller('LoginCtrl', ['$rootScope', '$cookies', '$scope', '$http', '$timeout', '$location', 'authservice', 'toastr', '$window',
+    function($rootScope, $cookies, $scope, $http, $timeout, $location, authservice, toastr, $window) {
 
       if ($location.hash() == 'change_password') {
         $scope.change_password = true;
@@ -112,8 +112,6 @@ angular.module('app')
             userSession.assignmentAttr = response.data.user.assignmentAttr;
             userSession.token = response.data.token;
             userSession.homeFolder = response.data.user.homeFolder;
-            reportingservice.reportStartDate = moment(Date.parse(userSession.defaultDateRange.split(',')[0]));
-            reportingservice.reportEndDate = moment(Date.parse(userSession.defaultDateRange.split(',')[1]));
 
             userSession.loginDate = new Date();
 

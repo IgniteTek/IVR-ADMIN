@@ -9,11 +9,10 @@
 
       angular
     .module('app', [
-        'app.core',
+        'app.core','app.dashboard2',
 
         /* Features */
-        'app.layout','app.visualize','app.search','app.dashboard2','app.transcript','app.reporting',
-        'app.upload','app.keyword','app.alert','app.social','app.trends','app.turk', 'ngCsv','chart.js','angularFileUpload'
+        'app.layout'
 
     ]);
   })();
