@@ -11,6 +11,9 @@
 
 /productRemove
 
+/getAllTheFuckingProducts
+/getAllTheFuckingCampaigns
+
 /offerRemove
 
 /projectRemove
@@ -37,8 +40,6 @@
 
 /updateUser:
     params: userId, password, email, phoneNumber
-    
+
 /logActivity:
     params: userId, action, message
-
-
