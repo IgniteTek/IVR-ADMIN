@@ -31,4 +31,14 @@
 /projectUpdate
     params: projectId, name, intro
 
+/createAccount
+    params: userName, password, email, phoneNumber
+    returns: accountId, userId
+
+/updateUser:
+    params: userId, password, email, phoneNumber
+    
+/logActivity:
+    params: userId, action, message
+
 
