@@ -36,7 +36,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       });
     };
   })
-  .controller('Dashboard2Ctrl', function($rootScope, $scope, $http, $interval, $timeout, $location, $compile, $sce,  authservice, toastr, $q) {
+  .controller('Dashboard2Ctrl', function($rootScope, $scope, $http, $interval, $timeout, $location, $compile, $sce, authservice, toastr, $q) {
 
 
     var self = this;
@@ -46,4 +46,38 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     $scope.$on('$viewContentLoaded', function() {
 
     });
+
+
+    var columnDefs = [{
+        headerName: 'Row',
+        field: 'rowNum',
+        minWidth: 75,
+        maxWidth: 100,      
+      }, {
+        headerName: 'Product Name',
+        field: 'productName',
+        maxWidth: 200
+      }
+    ];
+
+    $scope.gridOptions = {
+      columnDefs: columnDefs,
+      virtualPaging: false,
+      rowModelType: 'paged',
+      suppressSizeToFit: false,
+      suppressCellSelection: true,
+      rowSelection: 'multiple',
+      enableColResize: true,
+      suppressRowClickSelection: false,
+      rowDeselection: true,
+      headerHeight: 28,
+      rowHeight: 33,
+
+      onModelUpdated: function() {
+
+      },
+      onCellClicked: function(cell) {
+
+      }
+    };
   });
