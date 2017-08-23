@@ -144,9 +144,9 @@ app.use(function(req, res, next) {
 
 app.all('/*', function(req, res, next) {
     // Just send the index.html for other files to support HTML5Mode
-  /*  res.sendFile('index.html', {
+    res.sendFile('index.html', {
         root: path.join(__dirname, '../client/app/')
-    });*/
+    });
 });
 
 

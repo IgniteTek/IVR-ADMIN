@@ -1,5 +1,5 @@
 'use strict';
-/*global angular,agGrid,moment*/
+/*global angular,agGrid*/
 
 (function() {
 

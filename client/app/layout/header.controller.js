@@ -68,10 +68,7 @@
             };
 
             $scope.clearSearch = function() {
-              reportingservice.searchAction = {
-                action: 'none',
-                hideInput: false
-              };
+
             };
 
             function checkSession() {
@@ -88,11 +85,6 @@
                 })
                 .then(function() {});
 
-              /*         if (authservice.userSessionData.accountid == '21') {
-                  $('.logo-default').css('width', '350px');
-              } else if (authservice.userSessionData.userid == '59') {
-                  $('.logo-default').css('width', '350px');
-              }*/
             }
 
             setTimeout(checkSession, 200);

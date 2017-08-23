@@ -1,5 +1,5 @@
 'use strict';
-/*global angular,$,moment,_, jQuery,Waypoint,WaveSurfer,Clusterize*/
+/*global angular*/
 
 angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     function($compile) {
@@ -39,7 +39,6 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
   .controller('Dashboard2Ctrl', function($rootScope, $scope, $http, $interval, $timeout, $location, $compile, $sce, authservice, toastr, $q) {
 
 
-    var self = this;
 
     $scope.showSpinner = false;
 
@@ -52,7 +51,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
         headerName: 'Row',
         field: 'rowNum',
         minWidth: 75,
-        maxWidth: 100,      
+        maxWidth: 100,
       }, {
         headerName: 'Product Name',
         field: 'productName',

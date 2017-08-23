@@ -1,4 +1,4 @@
-/*global angular,moment,$ */
+/*global angular,$ */
 'use strict';
 
 angular.module('app')
