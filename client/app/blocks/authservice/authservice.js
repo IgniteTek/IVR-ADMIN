@@ -19,8 +19,7 @@
                         return false;
                     }
                     var userSession = JSON.parse(localStorage['userSession']);
-                    if (userSession.homeFolder == undefined) return false;
-                    if (userSession.ratingJSON == undefined) return false;
+                    if (userSession.name == undefined) return false;
                     self.userSessionData.name = userSession.name;
                     self.userSessionData.userid = userSession.userid;
                     self.userSessionData.email = userSession.email;
@@ -34,9 +33,6 @@
                     self.userSessionData.userDisplayName = userSession.userDisplayName;
                     self.userSessionData.defaultDateRange = userSession.defaultDateRange;
                     self.userSessionData.categorizationJson = userSession.categorizationJson;
-                    self.userSessionData.statusJson = userSession.statusJson;
-                    self.userSessionData.commentJSON = userSession.commentJSON;
-                    self.userSessionData.staticComment = userSession.commentJSON.length > 0 ? JSON.parse(userSession.commentJSON) : [];
                     self.userSessionData.permissionJson = userSession.permissionJson;
                     self.userSessionData.ratingJSON = userSession.ratingJSON;
                     self.userSessionData.homeFolder = userSession.homeFolder;
@@ -44,29 +40,12 @@
                     self.userSessionData.assignmentAttr = userSession.assignmentAttr;
                     self.permission = {};
                     self.accountSettings = {};
-                    self.userSessionData.accountOptions.forEach(function(accountSetting) {
+/*                    self.userSessionData.accountOptions.forEach(function(accountSetting) {
                         self.accountSettings[accountSetting.setting] = accountSetting.val;
                     });
                     self.userSessionData.permissionJson.forEach(function(permission) {
                         self.permission[permission.permission] = permission.val;
-                    });
-                    if ($rootScope.settings.production == 0) {
-                        self.permission.similarSearch = 'true';
-                        self.permission.searchScreen = 'true';
-                    }
-                    if (self.userSessionData.accountid == '21') {
-                        self.userSessionData.logo = 'content/images/ms.png';
-                        self.userSessionData.logowidth = 350;
-
-                    } else if (self.accountSettings.template == 'Sentio360') {
-                        self.userSessionData.logo = 'content/images/Sentio.png';
-                        self.userSessionData.logowidth = 350;
-
-                    } else {
-                        self.userSessionData.logo = 'content/images/logo.png';
-                        self.userSessionData.logowidth = 150;
-                    }
-
+                    });*/
                     //expire after some time???
                     userSession.loginDate = new Date();
                     $rootScope.apiToken = userSession.token;

@@ -20,7 +20,6 @@ var fs = require('fs');
 var Q = require('q');
 var _ = require('underscore');
 var request = require('request');
-var sql = require('mssql');
 
 var oldLog = console.log;
 console.log = function(message) {
@@ -41,24 +40,21 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 require('dotenv').load();
 
-sql.db1 = new sql.Connection({
-    user: process.env.DB2_USER,
-    password: process.env.DB2_PASS,
-    server: process.env.DB2_SERVER,
-    database: process.env.DB2,
-    requestTimeout: 120000
-}, function(err) {
-    if (err) console.error(err);
-    console.log('SQL Connected');
-});
 
-sql.db1.on('error', function(err) {
-    console.error('DB1 ' + err);
-    if (err.code == 'ECONNCLOSED') {
-        sql.db1.connect();
+var oracledb = require('oracledb');
+
+oracledb.createPool({
+    user: 'TEST_S603090DC3ORA03',
+    password: '1Kapets#',
+    connectString: '(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=stats.ctw71eo2joww.us-east-1.rds.amazonaws.com)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=ORCL)))'
+  },
+  function(err, pool) {
+    if (err) {
+      console.error(err.message);
+      return;
     }
-});
-
+    console.log('Oracle Pool Created');
+  });
 
 /*   cache Engine*/
 var cacheEngine = require('./service/cacheEngine');
