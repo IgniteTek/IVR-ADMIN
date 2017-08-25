@@ -57,72 +57,60 @@ router.post('/loginUser', function(req, res) {
         return;
       }
       var bindVars = {
-        v_x: 'joe',
-        v_y: 'john doe',
-        ret: {
+        v_userName: user,
+        v_password: password,
+        cur_result: {
           type: oracledb.CURSOR,
           dir: oracledb.BIND_OUT,
         }
       };
       connection.execute(
         // The statement to execute
-        'select * from SIVR_USERS where USER_NAME=:un and USER_PASS=:p', [user, password],
+        'call SIVR.login(:v_userName, :v_password,:cur_result)', bindVars,
         function(err, result) {
-          if (err || result.rows.length==0) {
-            console.error(err.message);
-            connection.close(
-              function(err) {
-                if (err) {
-                  console.error(err.message);
-                }
-              });
+          console.log(result);
+          console.log(err);
+          result.outBinds.cur_result.getRows(100, function(err, rows) {
+            if (err || rows.length == 0) {
+              console.error(err.message);
+              connection.close();
               res.status(401).json({
                 error: err.message,
                 message: 'login failed'
               });
-            return;
-          }
-          if (result.rows.length > 0) {
-            usr.email = 'test@1.com';
-            usr.userName = result.rows[0][2];
-            usr.accountName = 'test account';
-            usr.accountId = 1;
-            usr.userId = 1;
-            usr.categorizationAttribute = null;
-            usr.categorizationDisplayName = null;
-            usr.userAttribute = null;
-            usr.userDisplayName = null;
-            usr.defaultDateRange = null;
-            usr.categorizationJson = null;
-            usr.statusJson = null;
-            usr.permissionJson = null;
-            usr.assignmentAttr = null;
-            usr.accountOptions = null;
-            usr.commentJSON = null;
-            usr.ratingJSON = null;
-            usr.homeFolder = null;
+            }
+            if (rows.length > 0) {
+              console.log(rows);
+              usr.email = 'test@1.com';
+              usr.userName = rows[0][2];
+              usr.accountName = 'test account';
+              usr.accountId = 1;
+              usr.userId = 1;
+              usr.categorizationAttribute = null;
+              usr.categorizationDisplayName = null;
+              usr.userAttribute = null;
+              usr.userDisplayName = null;
+              usr.defaultDateRange = null;
+              usr.categorizationJson = null;
+              usr.statusJson = null;
+              usr.permissionJson = null;
+              usr.assignmentAttr = null;
+              usr.accountOptions = null;
+              usr.commentJSON = null;
+              usr.ratingJSON = null;
+              usr.homeFolder = null;
 
-            var new_token = uuid.v4();
-            cacheEngine.addApiToken(new_token, usr.userId);
-            res.json({
-              success: true,
-              token: new_token,
-              user: usr
-            });
-
-          }
+              var new_token = uuid.v4();
+              cacheEngine.addApiToken(new_token, usr.userId);
+              res.json({
+                success: true,
+                token: new_token,
+                user: usr
+              });
+            }
+            result.outBinds.cur_result.close();
+          });
           return;
-          /*      result.outBinds.ret.getRows(10, function(err, rows) {
-                  if (err) {
-                    console.error(err.message);
-                    doRelease(connection);
-                    return;
-                  }
-                  if (rows.length) {
-                    console.log(rows);
-                    getRows(result);
-                    return;
-                  }*/
         });
     });
 });
@@ -149,7 +137,7 @@ router.post('/logoutUser', function(req, res) {
   var userid = req.query.userid;
   var err;
   //cacheEngine.removeApiToken(token, userid);
-  var response=1;
+  var response = 1;
   if (err) {
     console.error(err);
     res.status(401).json({
