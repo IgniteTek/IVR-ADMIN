@@ -35,7 +35,7 @@
     params: projectId, name, intro
 
 /createAccount
-    params: userName, password, email, phoneNumber
+    params: userName, password, email, phoneNumber, firstName, lastName, companyName
     returns: accountId, userId
 
 /updateUser:

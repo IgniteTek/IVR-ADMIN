@@ -64,6 +64,7 @@ var cacheEngine = require('./service/cacheEngine');
  */
 
 var login = require('./routes/login');
+var account = require('./routes/account');
 
 
 var app = express();
@@ -121,6 +122,7 @@ app.use(function(req, res, next) {
     }
 });
 app.use('/api/login', login);
+app.use('/api/account', account);
 
 
 app.use(function(req, res, next) {
