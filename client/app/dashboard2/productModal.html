@@ -1,0 +1,38 @@
+<div class="modal-header" style="background-color: #fff;border-bottom: 1px solid #e5e5e5;">
+  <h3 class="modal-title" id="modal-title">Add a Product</h3>
+</div>'
+<div class="modal-body" style="height:350px;">
+  <form id="product" role="form" novalidate>
+    <div class="form-group">
+      <label>Product Name</label>
+      <div class="inputGroupContainer">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+          <input name="product_name" type="text" placeholder="Product Name" class="form-control" required>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Item Code</label>
+      <div class="inputGroupContainer">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
+          <input name="item_code" type="text" placeholder="Item Code" class="form-control" required>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>SKU Code</label>
+      <div class="inputGroupContainer">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
+          <input name="sku_code" type="text" placeholder="SKU Code" class="form-control" required>
+        </div>
+      </div>
+    </div>
+    <button type="submit" id="register_button" class="btn btn-complete btn-cons pull-right">Add Product</button>
+    <button class="btn btn-warning pull-right" ng-click="cancel()">Cancel</button>
+  </form>
+</div>
+<div class="modal-footer">
+</div>
