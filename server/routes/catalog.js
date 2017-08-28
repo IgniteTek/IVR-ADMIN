@@ -42,7 +42,30 @@ router.get('/addCatalogItem', function(req, res) {
     db.execProc('SIVR.addCatalogItem',
     params,
     cursors,
-    function(j) {
+    function(err, j) {
+        console.log('got back from execdb', j);
+        res.json(j);
+        return;
+    });
+
+});
+router.get('/updateCatalogItem', function(req, res) {
+    var params = [
+        {param: 'v_catalogId', value: req.query.catalogId},
+        {param: 'v_companyId', value: req.query.companyId},
+        {param: 'v_productName', value: req.query.productName},
+        {param: 'v_productCode', value: req.query.productCode},
+        {param: 'v_sku', value: req.query.sku},
+    ];
+    var cursors = [
+        {cursor: 'cur_result'},
+        {cursor: 'cur_result2'}
+    ];
+
+    db.execProc('SIVR.updateCatalogItem',
+    params,
+    cursors,
+    function(err, j) {
         console.log('got back from execdb', j);
         res.json(j);
         return;
@@ -60,7 +83,7 @@ router.get('/getCatalog', function(req, res) {
     db.execProc('SIVR.getCompanyCatalog',
     params,
     cursors,
-    function(j) {
+    function(err, j) {
         console.log('got back from execdb', j);
         res.json(j);
         return;
