@@ -61,10 +61,9 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       var modalInstance = $uibModal.open($scope.opts);
 
       modalInstance.result.then(function() {
-        //on ok button press
+        $scope.loadData();
       }, function() {
-        //on cancel button press
-        console.log('Modal Closed');
+        $scope.loadData();
       });
     };
     $scope.loadData = function() {
@@ -137,6 +136,9 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
                   },
                   notEmpty: {
                     message: 'Please supply product name'
+                  },
+                  blank: {
+                    message: 'Duplicate Product'
                   }
                 }
               },
@@ -147,6 +149,9 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
                   },
                   notEmpty: {
                     message: 'Please supply item code'
+                  },
+                  blank: {
+                    message: 'Duplicate Product'
                   }
                 }
               },
@@ -156,10 +161,10 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
                     min: 2,
                   },
                   notEmpty: {
-                    message: 'Please supply sku code'
+                    message: 'Please supply SKU code'
                   },
                   blank: {
-                    message: 'That sku is already in use, pick another'
+                    message: 'Duplicate Product'
                   }
                 }
               }
@@ -177,33 +182,23 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
 
             // Get the BootstrapValidator instance
             var bv = $form.data('bootstrapValidator');
-
-            // Use Ajax to submit form data
-            $.post('/api/login/createAccount', $form.serialize(), function(result) {
-              if (result.success) {
-                localStorage.setItem('user_name', $('form').serializeArray()[5].value);
-                localStorage.setItem('user_name_password', $('form').serializeArray()[6].value);
-                location.href = '/signup/login.html';
+            var form = $form.serialize();
+            form = form+'&companyId='+authservice.userSessionData.accountid;
+            $.post('/api/catalog/addCatalogItem', form, function(result) {
+              if (result.cur_result[0].SUCCESS) {
+                toastr.success('Product Added');
+                $uibModalInstance.close();
               } else {
-                if (result.MSG_CODE == 1) {
-                  bv.updateStatus('company_name', 'INVALID', 'blank');
-                } else if (result.MSG_CODE == 2) {
-                  bv.updateStatus('user_name', 'INVALID', 'blank');
-                } else if (result.MSG_CODE == 3) {
-                  bv.updateStatus('email', 'INVALID', 'blank');
-                } else {
-                  bv.updateMessage('user_name', 'blank', 'Account Signup Error');
-                  bv.updateStatus('user_name', 'INVALID', 'blank');
-                }
+                  bv.updateStatus('product_name', 'INVALID', 'blank');
+                  bv.updateStatus('item_code', 'INVALID', 'blank');
+                  bv.updateStatus('sku_code', 'INVALID', 'blank');
+
               }
             }, 'json');
           });
       }, 2000);
-      $scope.add = function() {
-        $uibModalInstance.close();
-      };
       $scope.cancel = function() {
-        $uibModalInstance.dismiss('cancel');
+        $uibModalInstance.close('cancel');
       };
     };
 

@@ -110,12 +110,12 @@ router.get('/RemoveCampaignItem', function(req, res) {
     });
 
 });
-router.get('/addCatalogItem', function(req, res) {
+router.post('/addCatalogItem', function(req, res) {
     var params = [
-        {param: 'v_companyId', value: req.query.companyId},
-        {param: 'v_productName', value: req.query.productName},
-        {param: 'v_productCode', value: req.query.productCode},
-        {param: 'v_sku', value: req.query.sku},
+        {param: 'v_companyId', value: req.body.companyId},
+        {param: 'v_productName', value: req.body.product_name},
+        {param: 'v_productCode', value: req.body.item_code},
+        {param: 'v_sku', value: req.body.sku_code},
     ];
     var cursors = [
         {cursor: 'cur_result'},
