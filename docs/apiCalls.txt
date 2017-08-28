@@ -2,7 +2,7 @@
     params: companyId, productName, productCode, sku
     returns: (samples)
         failed sample: {"cur_result":[{"SUCCESS":0,"MSG":"product name, code or SKU already exist - check 2nd resultset for duplicates"}],"cur_result2":[{"PRODUCT_NAME":"product1","PRODUCT_ITEM_CODE":"testCode","PRODUCT_SKU_CODE":"sku123"}]}
-        success sample: {"cur_result":[{"SUCCESS":1,"MSG":"catalog item created."}],"cur_result2":[{"PRODUCT_NAME":"product4","PRODUCT_ITEM_CODE":"testCode4","PRODUCT_SKU_CODE":"sku1234"}]}
+        success sample: {"cur_result":[{"SUCCESS":1,"MSG":"catalog item created."}],"cur_result2":[{"ID": 5, "PRODUCT_NAME":"product4","PRODUCT_ITEM_CODE":"testCode4","PRODUCT_SKU_CODE":"sku1234"}]}
 
     msg_codes: 0 success, 1 item exists
 
@@ -13,6 +13,19 @@
     {"ID":4,"PRODUCT_NAME":"product4","PRODUCT_ITEM_CODE":"testCode4","PRODUCT_SKU_CODE":"sku1234","CANUPDATE":1}]}
 
     msg_codes: 0 success
+
+/catalog/updateCatalogItem
+    params: catalogId, companyId, productName, productCode, sku
+    returns: {"cur_result":[{"SUCCESS":1,"MSG_CODE":0,"MSG":"Product updated."}],"cur_result2":[{"ID":5,"COMPANYID":5,"PRODUCTNAME":"product5Updated","PRODUCTCODE":"testCode5","SKU":"sku1235"}]}
+
+/catalog/createCampaign
+    params: companyId, campaignName, introPrompt
+    returns:
+    {"cur_result":[{"SUCCESS":1,"MSG_CODE":0,"MSG":"Campaign created."}],
+    "cur_result2":[{"ID":2,"COMPANYID":5,"CAMPAIGNSTATUS":"N","INTROPROMPT":"please buy"}]}
+
+/catalog/updateCampaign
+    params: campaignId, introPrompt
 
 
 /login/createAccount

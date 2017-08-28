@@ -21,12 +21,95 @@ var inspect = require('eyes').inspector({
 var cacheEngine = require('../service/cacheEngine');
 
 
-//  PROCEDURE createCompany(v_userName nvarchar2, v_password nvarchar2
-//, v_email nvarchar2, v_companyName nvarchar2
-//, v_phoneNumber nvarchar2, v_firstName nvarchar2
-//, v_lastName nvarchar2, cur_result out t_cursor)
+router.get('/createCampaign', function(req, res) {
+    var params = [
+        {param: 'v_companyId', value: req.query.companyId},
+        {param: 'v_campaignName', value: req.query.campaignName},
+        {param: 'v_introPrompt', value: req.query.introPrompt}
+    ];
+    var cursors = [
+        {cursor: 'cur_result'},
+        {cursor: 'cur_result2'}
+    ];
+
+    db.execProc('SIVR.createCampaign',
+    params,
+    cursors,
+    function(err, j) {
+        console.log('got back from execdb', j);
+        res.json(j);
+        return;
+    });
+
+});
+
+router.get('/UpdateCampaignItem', function(req, res) {
+    var params = [
+        {param: 'v_campaignId', value: req.query.campaignId},
+        {param: 'v_catalogId', value: req.query.catalogId},
+        {param: 'v_maxQty', value: req.query.maxQty},
+        {param: 'v_unitPrice', value: req.query.unitPrice},
+        {param: 'v_unitShipping', value: req.query.unitShipping},
+    ];
+    var cursors = [
+        {cursor: 'cur_result'},
+        {cursor: 'cur_result2'}
+    ];
+
+    db.execProc('SIVR.campaignAddOrUpdateItem',
+    params,
+    cursors,
+    function(err, j) {
+        console.log('got back from execdb', j);
+        res.json(j);
+        return;
+    });
+
+});
 
 
+router.get('/updateCampaign', function(req, res) {
+    var params = [
+        {param: 'v_companyId', value: req.query.companyId},
+        {param: 'v_campaignId', value: req.query.campaignId},
+        {param: 'v_campaignName', value: req.query.campaignName},
+        {param: 'v_introPrompt', value: req.query.introPrompt}
+    ];
+    var cursors = [
+        {cursor: 'cur_result'},
+        {cursor: 'cur_result2'}
+    ];
+
+    db.execProc('SIVR.updateCampaign',
+    params,
+    cursors,
+    function(err, j) {
+        console.log('got back from execdb', j);
+        res.json(j);
+        return;
+    });
+
+});
+router.get('/RemoveCampaignItem', function(req, res) {
+    var params = [
+        {param: 'v_campaignId', value: req.query.campaignId},
+        {param: 'v_catalogId', value: req.query.catalogId}
+    ];
+    var cursors = [
+        {cursor: 'cur_result'},
+        {cursor: 'cur_result2'}
+    ];
+
+    db.execProc('SIVR.campaignRemoveItem',
+    params,
+    cursors,
+    function(err, j) {
+        console.log('got back from execdb', j);
+        res.json(j);
+        return;
+    });
+
+});
 router.get('/addCatalogItem', function(req, res) {
     var params = [
         {param: 'v_companyId', value: req.query.companyId},
