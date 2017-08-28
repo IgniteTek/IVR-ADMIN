@@ -173,4 +173,22 @@ router.get('/getCatalog', function(req, res) {
     });
 
 });
+router.get('/getCampaigns', function(req, res) {
+    var params = [
+        {param: 'v_companyId', value: req.query.companyId}
+    ];
+    var cursors = [
+        {cursor: 'cur_result'}
+    ];
+
+    db.execProc('SIVR.getCompanyCampaigns',
+    params,
+    cursors,
+    function(err, j) {
+        console.log('got back from execdb', j);
+        res.json(j);
+        return;
+    });
+
+});
 module.exports = router;
