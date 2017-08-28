@@ -60,7 +60,7 @@ router.get('/getCatalog', function(req, res) {
     db.execProc('SIVR.getCompanyCatalog',
     params,
     cursors,
-    function(j) {
+    function(err,j) {
         console.log('got back from execdb', j);
         res.json(j);
         return;
