@@ -125,6 +125,96 @@ router.post('/loginUser', function(req, res) {
         });
     });
 });
+
+
+router.post('/createAccount', function(req, res) {
+  console.log(req.body);
+  if (!req.body.user_name || !req.body.password) {
+    res.json({
+      error: 'Must provide user name and password'
+    });
+    res.end();
+    return;
+  }
+  var password = Encryption.Encrypt(req.body.password);
+
+
+  oracledb.getConnection(
+    function(err, connection) {
+      if (err) {
+        console.error(err.message);
+        return;
+      }
+      var bindVars = {
+        v_userName: user,
+        v_password: password,
+        cur_result: {
+          type: oracledb.CURSOR,
+          dir: oracledb.BIND_OUT,
+        }
+      };
+      connection.execute(
+        // The statement to execute
+        'call SIVR.login(:v_userName, :v_password,:cur_result)', bindVars,
+        function(err, result) {
+          console.error(err);
+          result.outBinds.cur_result.getRows(100, function(err, rows) {
+            if (err || rows.length == 0) {
+              if (err == undefined) {
+                err = {
+                  message: 'Invalid Login'
+                };
+              }
+              console.error(inspect(err));
+              result.outBinds.cur_result.close(function(err) {
+                connection.close();
+              });
+              res.status(401).json({
+                error: err.message,
+                message: 'login failed'
+              });
+              return;
+            }
+            if (rows.length > 0) {
+              console.log(rows);
+              usr.email = rows[0][4];
+              usr.userName = rows[0][2];
+              usr.accountName = rows[0][5];
+              usr.accountId = rows[0][1];
+              usr.userId = rows[0][0];
+              usr.categorizationAttribute = null;
+              usr.categorizationDisplayName = null;
+              usr.userAttribute = null;
+              usr.userDisplayName = null;
+              usr.defaultDateRange = null;
+              usr.categorizationJson = null;
+              usr.statusJson = null;
+              usr.permissionJson = null;
+              usr.assignmentAttr = null;
+              usr.accountOptions = null;
+              usr.commentJSON = null;
+              usr.ratingJSON = null;
+              usr.homeFolder = null;
+
+              var new_token = uuid.v4();
+              cacheEngine.addApiToken(new_token, usr.userId);
+              res.json({
+                success: true,
+                token: new_token,
+                user: usr
+              });
+              result.outBinds.cur_result.close(function(err) {
+                connection.close();
+              });
+              return;
+            }
+
+          });
+          return;
+        });
+    });
+});
+
 router.post('/changePassword', function(req, res) {
   var userid = req.body.params.userid;
   var password = Encryption.Encrypt(req.body.params.password);
