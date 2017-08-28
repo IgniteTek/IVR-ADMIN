@@ -68,24 +68,31 @@ router.post('/loginUser', function(req, res) {
         // The statement to execute
         'call SIVR.login(:v_userName, :v_password,:cur_result)', bindVars,
         function(err, result) {
-          console.log(result);
-          console.log(err);
+          console.error(err);
           result.outBinds.cur_result.getRows(100, function(err, rows) {
             if (err || rows.length == 0) {
-              console.error(err.message);
-              connection.close();
+              if (err == undefined) {
+                err = {
+                  message: 'Invalid Login'
+                };
+              }
+              console.error(inspect(err));
+              result.outBinds.cur_result.close(function(err) {
+                connection.close();
+              });
               res.status(401).json({
                 error: err.message,
                 message: 'login failed'
               });
+              return;
             }
             if (rows.length > 0) {
               console.log(rows);
-              usr.email = 'test@1.com';
+              usr.email = rows[0][4];
               usr.userName = rows[0][2];
-              usr.accountName = 'test account';
-              usr.accountId = 1;
-              usr.userId = 1;
+              usr.accountName = rows[0][5];
+              usr.accountId = rows[0][1];
+              usr.userId = rows[0][0];
               usr.categorizationAttribute = null;
               usr.categorizationDisplayName = null;
               usr.userAttribute = null;
@@ -107,8 +114,12 @@ router.post('/loginUser', function(req, res) {
                 token: new_token,
                 user: usr
               });
+              result.outBinds.cur_result.close(function(err) {
+                connection.close();
+              });
+              return;
             }
-            result.outBinds.cur_result.close();
+
           });
           return;
         });
