@@ -238,6 +238,9 @@
             },
             notEmpty: {
               message: 'Please supply your company name'
+            },
+            blank: {
+              message: 'That company name is already in use, pick another'
             }
           }
         },
@@ -248,6 +251,9 @@
             },
             emailAddress: {
               message: 'Please supply a valid email address'
+            },
+            blank: {
+              message: 'That email is already in use, pick another'
             }
           }
         },
@@ -281,10 +287,14 @@
         if (result.success) {
           localStorage.setItem('user_name', $('form').serializeArray()[5].value);
           localStorage.setItem('user_name_password', $('form').serializeArray()[6].value);
-          location.href='/signup/login.html';
+          location.href = '/signup/login.html';
         } else {
-          if (result.error == 'Account name is not available') {
+          if (result.MSG_CODE == 1) {
+            bv.updateStatus('company_name', 'INVALID', 'blank');
+          } else if (result.MSG_CODE == 2) {
             bv.updateStatus('user_name', 'INVALID', 'blank');
+          } else if (result.MSG_CODE == 3) {
+            bv.updateStatus('email', 'INVALID', 'blank');
           } else {
             bv.updateMessage('user_name', 'blank', 'Account Signup Error');
             bv.updateStatus('user_name', 'INVALID', 'blank');

@@ -66,6 +66,7 @@ var cacheEngine = require('./service/cacheEngine');
 var login = require('./routes/login');
 var account = require('./routes/account');
 var catalog = require('./routes/catalog');
+var logging = require('./routes/logging');
 
 
 var app = express();
@@ -125,7 +126,7 @@ app.use(function(req, res, next) {
 app.use('/api/login', login);
 app.use('/api/account', account);
 app.use('/api/catalog', catalog);
-
+app.use('/api/logging', logging);
 
 app.use(function(req, res, next) {
     if (req.path.indexOf('/api') !== 0) {

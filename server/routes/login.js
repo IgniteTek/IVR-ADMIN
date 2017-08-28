@@ -49,7 +49,7 @@ router.post('/loginUser', function(req, res) {
   console.log('Encrypted password:' + password);
   console.log('password: ' + password + ', userName: ' + user);
 
-
+  oracledb.outFormat = oracledb.OBJECT;
   oracledb.getConnection(
     function(err, connection) {
       if (err) {
@@ -69,6 +69,14 @@ router.post('/loginUser', function(req, res) {
         'call SIVR.login(:v_userName, :v_password,:cur_result)', bindVars,
         function(err, result) {
           console.error(err);
+          if (err) {
+            res.status(401).json({
+              error: 'DB error',
+              message: 'login failed'
+            });
+            connection.close();
+            return;
+          }
           result.outBinds.cur_result.getRows(100, function(err, rows) {
             if (err || rows.length == 0) {
               if (err == undefined) {
@@ -87,12 +95,12 @@ router.post('/loginUser', function(req, res) {
               return;
             }
             if (rows.length > 0) {
-              console.log(rows);
-              usr.email = rows[0][4];
-              usr.userName = rows[0][2];
-              usr.accountName = rows[0][5];
-              usr.accountId = rows[0][1];
-              usr.userId = rows[0][0];
+              console.log('rows : ' + inspect(rows));
+              usr.email = rows[0].EMAIL;
+              usr.userName = rows[0].USER_NAME;
+              usr.accountName = rows[0].COMPANY_NAME;
+              usr.accountId = rows[0].COMPANY_ID;
+              usr.userId = rows[0].ID;
               usr.categorizationAttribute = null;
               usr.categorizationDisplayName = null;
               usr.userAttribute = null;
@@ -140,31 +148,31 @@ router.post('/createAccount', function(req, res) {
 
   var params = [{
       param: 'v_userName',
-      value: 'test1'
+      value: req.body.user_name
     },
     {
       param: 'v_password',
-      value: 'UPONE8WHIC1Ko8GEV6YZGQ=='
+      value: password
     },
     {
       param: 'v_email',
-      value: 'mazda@ignitemedia.com'
+      value: req.body.email
     },
     {
       param: 'v_companyName',
-      value: 'ignitetest1'
+      value: req.body.company_name
     },
     {
       param: 'v_phoneNumber',
-      value: '1234567890'
+      value: req.body.phone
     },
     {
       param: 'v_firstName',
-      value: 'mazda'
+      value: req.body.first_name
     },
     {
       param: 'v_lastName',
-      value: 'ebrahimi'
+      value: req.body.last_name
     }
   ];
   var cursors = [{
@@ -174,19 +182,30 @@ router.post('/createAccount', function(req, res) {
       cursor: 'cur_result2'
     }
   ];
-  oracledb.execProc('SIVR.createCompany2',
+  oracledb.execProc('SIVR.createCompany',
     params,
     cursors,
     function(err, j) {
       console.log(err);
-      if (err) {
+      if (err || j.cur_result2.length == 0) {
         res.json({
-          err: 'Error Getting Data'
+          success: false,
+          error: 'Error Getting Data'
         });
         return;
       }
       console.log('got back from execdb ' + inspect(j));
-      res.json(j);
+      if (!j.cur_result[0].SUCCESS) {
+        res.json({
+          success: false,
+          MSG_CODE: j.cur_result[0].MSG_CODE,
+          MSG: j.cur_result[0].MSG
+        });
+        return;
+      }
+      res.json({
+        success: true
+      });
       return;
     });
 
