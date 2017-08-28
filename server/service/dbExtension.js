@@ -5,6 +5,10 @@
 
 var oracledb = require('oracledb');
 var async = require('async');
+var inspect = require('eyes').inspector({
+  stream: null,
+  colors: false
+});
 
 oracledb.execProc = function(procName, inputParams, cursors, cb) {
 
@@ -47,15 +51,23 @@ oracledb.execProc = function(procName, inputParams, cursors, cb) {
       // The statement to execute
       cmd, bindVars,
       function(err, result) {
-        //console.log(result);
-        //console.log(err);
+        console.log(result);
+        console.log(err);
         console.log('cursors:', cursors);
-        var outp = [];
-
+        var outp = {};
+        if (err) {
+          connection.close();
+          cb(err,outp);
+          return;
+        }
         async.eachSeries(cursors, function iteratee(c, scb) {
             var x = c.cursor;
-            console.log('forming results for ', x);
             result.outBinds[x].getRows(10000, function(err, rows) {
+              if (err) {
+                connection.close();
+                cb(err,outp);
+                return;
+              }
               outp[x] = rows;
               result.outBinds[x].close(function(err) {
                 scb();
@@ -65,7 +77,7 @@ oracledb.execProc = function(procName, inputParams, cursors, cb) {
           },
           function(err) {
             connection.close();
-            cb(outp);
+            cb(err,outp);
             return;
           });
       });

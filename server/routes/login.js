@@ -138,81 +138,29 @@ router.post('/createAccount', function(req, res) {
   }
   var password = Encryption.Encrypt(req.body.password);
 
+  var params = [
+         {param: 'v_userName', value: 'test1'},
+         {param: 'v_password', value: 'UPONE8WHIC1Ko8GEV6YZGQ=='},
+         {param: 'v_email', value: 'mazda@ignitemedia.com'},
+         {param: 'v_companyName', value: 'ignitetest1'},
+         {param: 'v_phoneNumber', value: '1234567890'},
+         {param: 'v_firstName', value: 'mazda'},
+         {param: 'v_lastName', value: 'ebrahimi'}
+     ];
+     var cursors = [
+         {cursor: 'cur_result'},
+         {cursor: 'cur_result2'}
+     ];
+     oracledb.execProc('SIVR.createCompany2',
+     params,
+     cursors,
+     function(err,j) {
+         console.log(err);
+         console.log('got back from execdb '+ inspect(j));
+         res.json(j);
+         return;
+     });
 
-  oracledb.getConnection(
-    function(err, connection) {
-      if (err) {
-        console.error(err.message);
-        return;
-      }
-      var bindVars = {
-        v_userName: user,
-        v_password: password,
-        cur_result: {
-          type: oracledb.CURSOR,
-          dir: oracledb.BIND_OUT,
-        }
-      };
-      connection.execute(
-        // The statement to execute
-        'call SIVR.login(:v_userName, :v_password,:cur_result)', bindVars,
-        function(err, result) {
-          console.error(err);
-          result.outBinds.cur_result.getRows(100, function(err, rows) {
-            if (err || rows.length == 0) {
-              if (err == undefined) {
-                err = {
-                  message: 'Invalid Login'
-                };
-              }
-              console.error(inspect(err));
-              result.outBinds.cur_result.close(function(err) {
-                connection.close();
-              });
-              res.status(401).json({
-                error: err.message,
-                message: 'login failed'
-              });
-              return;
-            }
-            if (rows.length > 0) {
-              console.log(rows);
-              usr.email = rows[0][4];
-              usr.userName = rows[0][2];
-              usr.accountName = rows[0][5];
-              usr.accountId = rows[0][1];
-              usr.userId = rows[0][0];
-              usr.categorizationAttribute = null;
-              usr.categorizationDisplayName = null;
-              usr.userAttribute = null;
-              usr.userDisplayName = null;
-              usr.defaultDateRange = null;
-              usr.categorizationJson = null;
-              usr.statusJson = null;
-              usr.permissionJson = null;
-              usr.assignmentAttr = null;
-              usr.accountOptions = null;
-              usr.commentJSON = null;
-              usr.ratingJSON = null;
-              usr.homeFolder = null;
-
-              var new_token = uuid.v4();
-              cacheEngine.addApiToken(new_token, usr.userId);
-              res.json({
-                success: true,
-                token: new_token,
-                user: usr
-              });
-              result.outBinds.cur_result.close(function(err) {
-                connection.close();
-              });
-              return;
-            }
-
-          });
-          return;
-        });
-    });
 });
 
 router.post('/changePassword', function(req, res) {
