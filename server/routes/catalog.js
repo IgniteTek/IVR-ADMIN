@@ -27,23 +27,37 @@ var cacheEngine = require('../service/cacheEngine');
 //, v_lastName nvarchar2, cur_result out t_cursor)
 
 
-
-router.get('/testdb', function(req, res) {
+router.get('/addCatalogItem', function(req, res) {
     var params = [
-        {param: 'v_userName', value: 'test1'},
-        {param: 'v_password', value: 'UPONE8WHIC1Ko8GEV6YZGQ=='},
-        {param: 'v_email', value: 'mazda@ignitemedia.com'},
-        {param: 'v_companyName', value: 'ignitetest1'},
-        {param: 'v_phoneNumber', value: '1234567890'},
-        {param: 'v_firstName', value: 'mazda'},
-        {param: 'v_lastName', value: 'ebrahimi'}
+        {param: 'v_companyId', value: req.query.companyId},
+        {param: 'v_productName', value: req.query.productName},
+        {param: 'v_productCode', value: req.query.productCode},
+        {param: 'v_sku', value: req.query.sku},
     ];
     var cursors = [
         {cursor: 'cur_result'},
         {cursor: 'cur_result2'}
     ];
 
-    db.execProc('SIVR.createCompany',
+    db.execProc('SIVR.addCatalogItem',
+    params,
+    cursors,
+    function(j) {
+        console.log('got back from execdb', j);
+        res.json(j);
+        return;
+    });
+
+});
+router.get('/getCatalog', function(req, res) {
+    var params = [
+        {param: 'v_companyId', value: req.query.companyId}
+    ];
+    var cursors = [
+        {cursor: 'cur_result'}
+    ];
+
+    db.execProc('SIVR.getCompanyCatalog',
     params,
     cursors,
     function(j) {
