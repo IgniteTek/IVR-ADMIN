@@ -138,28 +138,57 @@ router.post('/createAccount', function(req, res) {
   }
   var password = Encryption.Encrypt(req.body.password);
 
-  var params = [
-         {param: 'v_userName', value: 'test1'},
-         {param: 'v_password', value: 'UPONE8WHIC1Ko8GEV6YZGQ=='},
-         {param: 'v_email', value: 'mazda@ignitemedia.com'},
-         {param: 'v_companyName', value: 'ignitetest1'},
-         {param: 'v_phoneNumber', value: '1234567890'},
-         {param: 'v_firstName', value: 'mazda'},
-         {param: 'v_lastName', value: 'ebrahimi'}
-     ];
-     var cursors = [
-         {cursor: 'cur_result'},
-         {cursor: 'cur_result2'}
-     ];
-     oracledb.execProc('SIVR.createCompany2',
-     params,
-     cursors,
-     function(err,j) {
-         console.log(err);
-         console.log('got back from execdb '+ inspect(j));
-         res.json(j);
-         return;
-     });
+  var params = [{
+      param: 'v_userName',
+      value: 'test1'
+    },
+    {
+      param: 'v_password',
+      value: 'UPONE8WHIC1Ko8GEV6YZGQ=='
+    },
+    {
+      param: 'v_email',
+      value: 'mazda@ignitemedia.com'
+    },
+    {
+      param: 'v_companyName',
+      value: 'ignitetest1'
+    },
+    {
+      param: 'v_phoneNumber',
+      value: '1234567890'
+    },
+    {
+      param: 'v_firstName',
+      value: 'mazda'
+    },
+    {
+      param: 'v_lastName',
+      value: 'ebrahimi'
+    }
+  ];
+  var cursors = [{
+      cursor: 'cur_result'
+    },
+    {
+      cursor: 'cur_result2'
+    }
+  ];
+  oracledb.execProc('SIVR.createCompany2',
+    params,
+    cursors,
+    function(err, j) {
+      console.log(err);
+      if (err) {
+        res.json({
+          err: 'Error Getting Data'
+        });
+        return;
+      }
+      console.log('got back from execdb ' + inspect(j));
+      res.json(j);
+      return;
+    });
 
 });
 
