@@ -16,7 +16,7 @@ angular.module('app')
         if ($scope.change_password == false && authservice.reConnect()) {
           $location.path('/');
         }
-        if (localStorage.getItem('user_name_password') && localStorage.getItem('user_name_password').length > 1) {
+        if (localStorage.getItem('user_name_password2') && localStorage.getItem('user_name_password').length > 1) {
           var credentials = {
             data: {}
           };
