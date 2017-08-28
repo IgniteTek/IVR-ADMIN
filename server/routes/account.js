@@ -19,6 +19,7 @@ var inspect = require('eyes').inspector({
 });
 
 var cacheEngine = require('../service/cacheEngine');
+
 router.get('/testdb', function(req, res) {
     var params = [
         {param: 'v_userName', value: 'jimmy'},
@@ -31,13 +32,12 @@ router.get('/testdb', function(req, res) {
 
     db.execProc('SIVR.login2',
     params,
-    cursors, 
+    cursors,
     function(j) {
-        console.log("got back from execdb", j);
+        console.log('got back from execdb', j);
         res.json(j);
         return;
     });
 
 });
 module.exports = router;
-  
