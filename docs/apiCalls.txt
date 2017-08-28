@@ -1,6 +1,29 @@
-/productAdd
-    params: name, description, fulfillmentCode
-    returns: productId
+/catalog/addCatalogItem
+    params: companyId, productName, productCode, sku
+    returns: (samples)
+        failed sample: {"cur_result":[{"SUCCESS":0,"MSG":"product name, code or SKU already exist - check 2nd resultset for duplicates"}],"cur_result2":[{"PRODUCT_NAME":"product1","PRODUCT_ITEM_CODE":"testCode","PRODUCT_SKU_CODE":"sku123"}]}
+        success sample: {"cur_result":[{"SUCCESS":1,"MSG":"catalog item created."}],"cur_result2":[{"PRODUCT_NAME":"product4","PRODUCT_ITEM_CODE":"testCode4","PRODUCT_SKU_CODE":"sku1234"}]}
+
+    msg_codes: 0 success, 1 item exists
+
+/catalog/getCatalog
+    params: companyId
+    returns:
+    {"cur_result":[{"ID":3,"PRODUCT_NAME":"product1","PRODUCT_ITEM_CODE":"testCode","PRODUCT_SKU_CODE":"sku123","CANUPDATE":1},
+    {"ID":4,"PRODUCT_NAME":"product4","PRODUCT_ITEM_CODE":"testCode4","PRODUCT_SKU_CODE":"sku1234","CANUPDATE":1}]}
+
+    msg_codes: 0 success
+
+
+/login/createAccount
+    params: userName, password, email, phoneNumber, firstName, lastName, companyName
+    returns: ??
+    
+
+    msg_codes:  0 success, 1 company already exists, 2 username already exists, 3 email already exists
+
+
+
 
 /offerAdd
     params: productId, price, description,
@@ -34,9 +57,6 @@
 /projectUpdate
     params: projectId, name, intro
 
-/createAccount
-    params: userName, password, email, phoneNumber, firstName, lastName, companyName
-    returns: accountId, userId
 
 /updateUser:
     params: userId, password, email, phoneNumber
