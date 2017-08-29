@@ -16,7 +16,7 @@
     "underscore": "~1.8.3",
     "angular-xeditable": "~0.1.9",
     "angular-loading-bar": "~0.8.0",
-    "ag-grid": "~5.4.x",
+    "ag-grid": "^13.0.0",
     "datejs": "~1.0.0-rc3",
     "waypoints": "~4.0.0",
     "ng-csv": "~0.3.6",
