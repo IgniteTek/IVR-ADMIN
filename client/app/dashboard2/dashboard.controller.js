@@ -43,7 +43,9 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     $scope.showSpinner = false;
 
     $scope.$on('$viewContentLoaded', function() {
-      $scope.loadData();
+      $timeout(function() {
+        $scope.loadData();
+      }, 1000);
     });
 
     $scope.addProduct = function() {
@@ -75,6 +77,14 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
         .then(function(response) {
           $scope.gridOptions.api.setRowData(response.data.cur_result);
         });
+        $http.get('api/catalog/getCampaigns', {
+            params: {
+              companyId: authservice.userSessionData.accountid
+            }
+          })
+          .then(function(response) {
+            $scope.gridOptions2.api.setRowData(response.data.cur_result);
+          });
     };
 
     $scope.productFilterChanged = function() {
@@ -87,20 +97,59 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       maxWidth: 100,
     }, {
       headerName: 'Product Name',
-      field: 'PRODUCT_NAME',
+      field: 'PRODUCTNAME',
       maxWidth: 500
     }, {
       headerName: 'Item Code',
-      field: 'PRODUCT_ITEM_CODE',
+      field: 'PRODUCTCODE',
       maxWidth: 500
     }, {
       headerName: 'SKU Code',
-      field: 'PRODUCT_SKU_CODE',
+      field: 'SKU',
       maxWidth: 500
     }];
     //{"ID":3,"PRODUCT_NAME":"product1","PRODUCT_ITEM_CODE":"testCode","PRODUCT_SKU_CODE":"sku123","CANUPDATE":1
     $scope.gridOptions = {
       columnDefs: columnDefs,
+      virtualPaging: false,
+      suppressSizeToFit: false,
+      suppressCellSelection: true,
+      rowSelection: 'multiple',
+      enableColResize: true,
+      suppressRowClickSelection: false,
+      rowDeselection: true,
+      headerHeight: 28,
+      rowHeight: 33,
+
+      onModelUpdated: function() {
+
+      },
+      onCellClicked: function(cell) {
+
+      }
+    };
+
+     var columnDefs2 = [{
+      headerName: 'Row ID',
+      field: 'ID',
+      minWidth: 75,
+      maxWidth: 100,
+    }, {
+      headerName: 'Campaign Name',
+      field: 'CAMPAIGNNAME',
+      maxWidth: 500
+    }, {
+      headerName: 'Campaign Status',
+      field: 'CAMPAIGNSTATUS',
+      maxWidth: 500
+    }, {
+      headerName: 'Greeting',
+      field: 'INTROPROMPT',
+      maxWidth: 500
+    }];
+    //{"ID":3,"PRODUCT_NAME":"product1","PRODUCT_ITEM_CODE":"testCode","PRODUCT_SKU_CODE":"sku123","CANUPDATE":1
+    $scope.gridOptions2 = {
+      columnDefs: columnDefs2,
       virtualPaging: false,
       suppressSizeToFit: false,
       suppressCellSelection: true,
@@ -183,15 +232,15 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
             // Get the BootstrapValidator instance
             var bv = $form.data('bootstrapValidator');
             var form = $form.serialize();
-            form = form+'&companyId='+authservice.userSessionData.accountid;
+            form = form + '&companyId=' + authservice.userSessionData.accountid;
             $.post('/api/catalog/addCatalogItem', form, function(result) {
               if (result.cur_result[0].SUCCESS) {
                 toastr.success('Product Added');
                 $uibModalInstance.close();
               } else {
-                  bv.updateStatus('product_name', 'INVALID', 'blank');
-                  bv.updateStatus('item_code', 'INVALID', 'blank');
-                  bv.updateStatus('sku_code', 'INVALID', 'blank');
+                bv.updateStatus('product_name', 'INVALID', 'blank');
+                bv.updateStatus('item_code', 'INVALID', 'blank');
+                bv.updateStatus('sku_code', 'INVALID', 'blank');
 
               }
             }, 'json');

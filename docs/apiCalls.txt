@@ -31,9 +31,48 @@
 /login/createAccount
     params: userName, password, email, phoneNumber, firstName, lastName, companyName
     returns: ??
-    
+
 
     msg_codes:  0 success, 1 company already exists, 2 username already exists, 3 email already exists
 
 
 
+<<<<<<< Updated upstream
+=======
+
+/offerAdd
+    params: productId, price, description,
+    returns: offerId
+
+/projectAdd
+    params: projectId, name, intro
+
+/productRemove
+
+/offerRemove
+
+/projectRemove
+
+/projectAssignOffer
+    params: projectId, offerId,
+
+/projectGet
+    params: projectId,
+    returns: project object with offers
+
+/productUpdate
+    params: productId, name, description, fulfillmentCode
+
+/offerUpdate
+    params: offerId, price, description
+
+/projectUpdate
+    params: projectId, name, intro
+
+
+/updateUser:
+    params: userId, password, email, phoneNumber
+
+/logActivity:
+    params: userId, action, message
+>>>>>>> Stashed changes
