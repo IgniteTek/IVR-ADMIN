@@ -173,6 +173,28 @@ router.get('/getCatalog', function(req, res) {
     });
 
 });
+
+router.get('/getCampaign', function(req, res) {
+    var params = [
+        {param: 'v_campaignId', value: req.query.campaignId}
+    ];
+    var cursors = [
+        {cursor: 'campaign'},
+        {cursor: 'phone'},
+        {cursor: 'catalog'},
+    ];
+
+    db.execProc('SIVR.getCampaignDetails',
+    params,
+    cursors,
+    function(err, j) {
+        console.log('got back from execdb', j);
+        res.json(j);
+        return;
+    });
+
+});
+
 router.get('/getCampaigns', function(req, res) {
     var params = [
         {param: 'v_companyId', value: req.query.companyId}
