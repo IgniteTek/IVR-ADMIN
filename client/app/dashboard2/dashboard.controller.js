@@ -55,10 +55,9 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
         dialogFade: false,
         keyboard: true,
         templateUrl: '/dashboard2/productModal.html',
-        controller: ModalInstanceCtrl,
+        controller: productModalInstanceCtrl,
         resolve: {} // empty storage
       };
-
 
       var modalInstance = $uibModal.open($scope.opts);
 
@@ -68,6 +67,27 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
         $scope.loadData();
       });
     };
+
+    $scope.addCampaign = function() {
+      $scope.opts = {
+        backdrop: true,
+        backdropClick: true,
+        dialogFade: false,
+        keyboard: true,
+        templateUrl: '/dashboard2/campaignModal.html',
+        controller: campaignModalInstanceCtrl,
+        resolve: {} // empty storage
+      };
+
+      var modalInstance = $uibModal.open($scope.opts);
+
+      modalInstance.result.then(function() {
+        $scope.loadData();
+      }, function() {
+        $scope.loadData();
+      });
+    };
+
     $scope.loadData = function() {
       $http.get('api/catalog/getCatalog', {
           params: {
@@ -161,15 +181,15 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       headerName: 'Rush Pricing',
       field: 'RUSHPRICE',
       maxWidth: 500,
-      valueGetter:function(params){
-        return params.data.RUSHPRICE?params.data.RUSHPRICE:'None';
+      valueGetter: function(params) {
+        return params.data.RUSHPRICE ? params.data.RUSHPRICE : 'None';
       }
     }, {
       headerName: 'Warranty Pricing',
       field: 'WARRANTYPRICE',
       maxWidth: 500,
-      valueGetter:function(params){
-        return params.data.WARRANTYPRICE?params.data.WARRANTYPRICE:'None';
+      valueGetter: function(params) {
+        return params.data.WARRANTYPRICE ? params.data.WARRANTYPRICE : 'None';
       }
     }];
 
@@ -208,7 +228,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       }
     };
 
-    var ModalInstanceCtrl = function($scope, $uibModalInstance, $uibModal) {
+    var productModalInstanceCtrl = function($scope, $uibModalInstance, $uibModal) {
       $timeout(function() {
         $('form').bootstrapValidator({
             // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
@@ -283,9 +303,64 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       };
     };
 
-
-
-
+    var campaignModalInstanceCtrl = function($scope, $uibModalInstance, $uibModal) {
+      $timeout(function() {
+        $('form').bootstrapValidator({
+            // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
+            feedbackIcons: {
+              valid: 'glyphicon glyphicon-ok',
+              invalid: 'glyphicon glyphicon-remove',
+              validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+              campaign_name: {
+                validators: {
+                  stringLength: {
+                    min: 2,
+                  },
+                  notEmpty: {
+                    message: 'Please supply campaign name'
+                  },
+                  blank: {
+                    message: ''
+                  }
+                }
+              },
+              introPrompt: {
+                validators: {
+                  stringLength: {
+                    min: 2,
+                  },
+                  notEmpty: {
+                    message: 'Please supply greeting'
+                  },
+                  blank: {
+                    message: ''
+                  }
+                }
+              }
+            }
+          })
+          .on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form = $(e.target);
+            var bv = $form.data('bootstrapValidator');
+            var form = $form.serialize();
+            form = form + '&companyId=' + authservice.userSessionData.accountid;
+            $.post('/api/catalog/createCampaign', form, function(result) {
+              if (result.cur_result[0].SUCCESS) {
+                toastr.success('Campaign Added');
+                $uibModalInstance.close();
+              } else {
+              toastr.error('Error Adding Campaign');
+              }
+            }, 'json');
+          });
+      }, 2000);
+      $scope.cancel = function() {
+        $uibModalInstance.close('cancel');
+      };
+    };
 
     var productDetailColumnDefs = [{
         headerName: 'Product Name',
@@ -320,11 +395,10 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     ];
 
     var phoneDetailColumnDefs = [{
-        headerName: 'Phone Number',
-        field: 'DN',
-        cellClass: 'call-record-cell'
-      }
-    ];
+      headerName: 'Phone Number',
+      field: 'DN',
+      cellClass: 'call-record-cell'
+    }];
 
     function campaignPanelProductCellRenderer() {}
 
@@ -341,14 +415,14 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
           }
         })
         .then(function(response) {
-          self.setupDetailGrid(response.data.catalog,response.data.phone);
+          self.setupDetailGrid(response.data.catalog, response.data.phone);
           self.consumeMouseWheelOnDetailGrid();
           self.addSeachFeature();
           self.addButtonListeners();
         });
     };
 
-    campaignPanelProductCellRenderer.prototype.setupDetailGrid = function(items,phone) {
+    campaignPanelProductCellRenderer.prototype.setupDetailGrid = function(items, phone) {
 
       this.detailGridOptions = {
         enableSorting: true,
@@ -378,7 +452,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
         }
       };
 
-       eDetailGrid = this.eGui.querySelector('.full-width-details');
+      eDetailGrid = this.eGui.querySelector('.full-width-details');
       new agGrid.Grid(eDetailGrid, this.detailGridOptions);
     };
 
@@ -388,7 +462,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
 
       var template =
         '<div class="full-width-panel">' +
-        '  <div class="full-width-details">' +
+        '  <div class="full-width-details">Phone Numbers' +
         '  </div>' +
         '  <div class="full-width-grid"></div>' +
         '  <div class="full-width-grid-toolbar">' +

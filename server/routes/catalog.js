@@ -21,13 +21,13 @@ var inspect = require('eyes').inspector({
 var cacheEngine = require('../service/cacheEngine');
 
 
-router.get('/createCampaign', function(req, res) {
+router.post('/createCampaign', function(req, res) {
     var params = [
-        {param: 'v_companyId', value: req.query.companyId},
-        {param: 'v_campaignName', value: req.query.campaignName},
-        {param: 'v_introPrompt', value: req.query.introPrompt},
-        {param: 'v_warrantyPrice', value: req.query.warrantyPrice},
-        {param: 'v_rushPrice', value: req.query.rushPrice}
+        {param: 'v_companyId', value: req.body.companyId},
+        {param: 'v_campaignName', value: req.body.campaign_name},
+        {param: 'v_introPrompt', value: req.body.greeting},
+        {param: 'v_warrantyPrice', value: req.body.warrantyPrice},
+        {param: 'v_rushPrice', value: req.body.rushPrice}
     ];
     var cursors = [
         {cursor: 'cur_result'},
