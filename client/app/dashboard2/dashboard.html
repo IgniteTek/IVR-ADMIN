@@ -1,3 +1,54 @@
+<style>
+    /* style would normally go in a .css file, however putting in here to keep example in fewer files */
+
+    /* all of these styles are particular to this example. if copying this example, you don't copy the styles,
+       you should lay out and style your own component as you want yourself. */
+
+    .full-width-panel {
+        position: relative;
+        background: #fafafa;
+        height: 100%;
+        width: 100%;
+        padding: 5px;
+        box-sizing: border-box;
+        border-left: 2px solid grey;
+        border-bottom: 2px solid lightgray;
+        border-right: 2px solid lightgray;
+    }
+    .call-record-cell {
+        text-align: right;
+    }
+    .full-width-detail {
+        padding-top: 4px;
+    }
+    .full-width-details {
+        float: left;
+        padding: 5px;
+        margin: 5px;
+        width: 150px;
+    }
+    .full-width-grid {
+        margin-left: 150px;
+        padding-top: 25px;
+        box-sizing: border-box;
+        display: block;
+        height: 100%;
+    }
+    .full-width-grid-toolbar {
+        top: 4px;
+        left: 30px;
+        margin-left: 150px;
+        display: block;
+        position: absolute;
+    }
+    .full-width-phone-icon {
+        padding-right: 10px;
+    }
+    .full-width-search {
+        border: 1px solid #eee;
+        margin-left: 10px;
+    }
+</style>
 <div id="spinner" ng-show="showSpinner" style="background:url(content/images/spinner.gif) no-repeat center center;width:200px;height:200px;position: fixed;top: 30%;left: 41%;z-index: 99999;"></div>
 
 <div class="col-md-12">
@@ -21,7 +72,7 @@
                             </button>
           <div style="float: right;margin-right: 20px;" class="dataTables_filter">
             <label>Search Products :
-                        <input id="filename_filter" ng-model="productFilter" ng-change="productFilterChanged()" class="form-control input-small input-inline ng-pristine ng-untouched ng-valid ng-empty" placeholder="" type="search"></label>
+                        <input id="" ng-model="productFilter" ng-change="productFilterChanged()" class="form-control input-small input-inline ng-pristine ng-untouched ng-valid ng-empty" placeholder="" type="search"></label>
           </div>
         </div>
       </div>
@@ -42,7 +93,7 @@
         <div id="contact_tool_row" style="">
           <h4 style="display:inline-block">View
             <span class="semi-bold ng-binding">Campaigns</span></h4>
-            <button id="add_product_buttom" ng-click="addCampaign()" tooltip-popup-delay="500" uib-tooltip="Add Product" style="float:right" type="button" class="btn btn-default">
+            <button id="add_campaign_buttom" ng-click="addCampaign()" tooltip-popup-delay="500" uib-tooltip="Add Campaign" style="float:right" type="button" class="btn btn-default">
                           <span style="" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
                       </button>
           <button id="refresh_button" ng-click="loadData()" tooltip-popup-delay="500" uib-tooltip="Refresh Query" style="float:right" type="button" class="btn btn-default">
@@ -55,15 +106,15 @@
                             <span style="" class="glyphicon glyphicon-export" aria-hidden="true"></span>
                             </button>
           <div style="float: right;margin-right: 20px;" class="dataTables_filter">
-            <label>Search Products :
-                        <input id="filename_filter" ng-model="campaignFilter" ng-change="campaignFilterChanged()" class="form-control input-small input-inline ng-pristine ng-untouched ng-valid ng-empty" placeholder="" type="search"></label>
+            <label>Search Campaigns :
+                        <input id="" ng-model="campaignFilter" ng-change="campaignFilterChanged()" class="form-control input-small input-inline ng-pristine ng-untouched ng-valid ng-empty" placeholder="" type="search"></label>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="table-responsive">
           <div id="basicTable_wrapper2" class="dataTables_wrapper form-inline no-footer">
-            <div ag-grid="gridOptions2" class="ag-fresh" style="height: 250px;width:100%;"></div>
+            <div ag-grid="gridOptions2" class="ag-fresh" style="height: 550px;width:100%;"></div>
           </div>
         </div>
       </div>

@@ -83,6 +83,9 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
           }
         })
         .then(function(response) {
+          response.data.cur_result.forEach(function(campaign, index, result) {
+            result[index].items = {};
+          });
           $scope.gridOptions2.api.setRowData(response.data.cur_result);
         });
     };
@@ -90,6 +93,10 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     $scope.productFilterChanged = function() {
       $scope.gridOptions.api.setQuickFilter($scope.productFilter);
     };
+    $scope.campaignFilterChanged = function() {
+      $scope.gridOptions2.api.setQuickFilter($scope.campaignFilter);
+    };
+
     var columnDefs = [{
       headerName: 'Row ID',
       field: 'ID',
@@ -151,44 +158,33 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       field: 'INTROPROMPT',
       maxWidth: 500
     }];
-    //{"ID":3,"PRODUCT_NAME":"product1","PRODUCT_ITEM_CODE":"testCode","PRODUCT_SKU_CODE":"sku123","CANUPDATE":1
+
     $scope.gridOptions2 = {
       columnDefs: columnDefs2,
-      virtualPaging: false,
-      suppressSizeToFit: false,
-      suppressCellSelection: true,
-      rowSelection: 'multiple',
+      enableFilter: true,
+      cacheQuickFilter: true,
       enableColResize: true,
-      suppressRowClickSelection: false,
       rowDeselection: true,
       headerHeight: 28,
       rowHeight: 33,
-      getNodeChildDetails: function(record) {
-        if (record.callRecords) {
-          return {
-            group: true,
-            // the key is used by the default group cellRenderer
-            key: record.name,
-            // provide ag-Grid with the children of this group
-            children: [record.callRecords],
-            // for demo, expand the third row by default
-            expanded: record.account === 177005
-          };
-        } else {
-          return null;
-        }
-      },
-      fullWidthCellRenderer: DetailPanelCellRenderer,
+      fullWidthCellRenderer: campaignPanelProductCellRenderer,
       getRowHeight: function(params) {
         var rowIsDetailRow = params.node.level === 1;
         // return 100 when detail row, otherwise return 25
         return rowIsDetailRow ? 200 : 25;
       },
       isFullWidthCell: function(rowNode) {
-        return rowNode.level === 1;
+        var rowIsNestedRow = rowNode.flower;
+        return rowIsNestedRow;
+      },
+      doesDataFlower: function(dataItem) {
+        return true;
       },
       defaultColDef: {
         menuTabs: ['generalMenuTab', 'columnsMenuTab']
+      },
+      onGridReady: function(params) {
+        params.api.sizeColumnsToFit();
       },
       onModelUpdated: function() {
 
@@ -281,140 +277,148 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       };
     };
 
+
+
+
+
+    var detailColumnDefs = [{
+        headerName: 'Product Name',
+        field: 'PRODUCTNAME',
+        cellClass: 'call-record-cell'
+      },
+      {
+        headerName: 'Item Code',
+        field: 'PRODUCTCODE',
+        cellClass: 'call-record-cell'
+      },
+      {
+        headerName: 'SKU',
+        field: 'SKU',
+        cellClass: 'call-record-cell'
+      },
+      {
+        headerName: 'Price',
+        field: 'UNITPRICE',
+        cellClass: 'call-record-cell'
+      },
+      {
+        headerName: 'Shipping',
+        field: 'UNITSHIPPING',
+        cellClass: 'call-record-cell'
+      },
+      {
+        headerName: 'Max Quantity',
+        field: 'MAXQTY',
+        cellClass: 'call-record-cell'
+      }
+    ];
+
+    function campaignPanelProductCellRenderer() {}
+
+    campaignPanelProductCellRenderer.prototype.init = function(params) {
+      // trick to convert string of html into dom object
+      var self = this;
+      var eTemp = document.createElement('div');
+      eTemp.innerHTML = self.getTemplate(params);
+      self.eGui = eTemp.firstElementChild;
+      $http.get('api/catalog/getCampaign', {
+          params: {
+            companyId: authservice.userSessionData.accountid,
+            campaignId: params.node.parent.data.ID
+          }
+        })
+        .then(function(response) {
+          self.setupDetailGrid(response.data.catalog);
+          self.consumeMouseWheelOnDetailGrid();
+          self.addSeachFeature();
+          self.addButtonListeners();
+        });
+    };
+
+    campaignPanelProductCellRenderer.prototype.setupDetailGrid = function(items) {
+
+      this.detailGridOptions = {
+        enableSorting: true,
+        enableFilter: true,
+        enableColResize: true,
+        rowData: items,
+        columnDefs: detailColumnDefs,
+        onGridReady: function(params) {
+          setTimeout(function() {
+            params.api.sizeColumnsToFit();
+          }, 0);
+        }
+      };
+
+      var eDetailGrid = this.eGui.querySelector('.full-width-grid');
+      new agGrid.Grid(eDetailGrid, this.detailGridOptions);
+    };
+
+    campaignPanelProductCellRenderer.prototype.getTemplate = function(params) {
+
+      var parentRecord = params.node.parent.data;
+
+      var template =
+        '<div class="full-width-panel">' +
+        '  <div class="full-width-details">' +
+        '  </div>' +
+        '  <div class="full-width-grid"></div>' +
+        '  <div class="full-width-grid-toolbar">' +
+        '       <img class="hide full-width-phone-icon" src="../images/phone.png"/>' +
+        '       <button class="hide"><img src="../images/fire.png"/></button>' +
+        '       <button class="hide"><img src="../images/frost.png"/></button>' +
+        '       <button class="hide"><img src="../images/sun.png"/></button>' +
+        '       Products In Campaign <input class="full-width-search" placeholder="Search"/>' +
+        '  </div>' +
+        '</div>';
+
+      return template;
+    };
+
+    campaignPanelProductCellRenderer.prototype.getGui = function() {
+      return this.eGui;
+    };
+
+    campaignPanelProductCellRenderer.prototype.destroy = function() {
+      this.detailGridOptions.api.destroy();
+    };
+
+    campaignPanelProductCellRenderer.prototype.addSeachFeature = function() {
+      var tfSearch = this.eGui.querySelector('.full-width-search');
+      var gridApi = this.detailGridOptions.api;
+
+      var searchListener = function() {
+        var filterText = tfSearch.value;
+        gridApi.setQuickFilter(filterText);
+      };
+
+      tfSearch.addEventListener('input', searchListener);
+    };
+
+    campaignPanelProductCellRenderer.prototype.addButtonListeners = function() {
+      var eButtons = this.eGui.querySelectorAll('.full-width-grid-toolbar button');
+
+      for (var i = 0; i < eButtons.length; i++) {
+        eButtons[i].addEventListener('click', function() {
+          window.alert('Sample button pressed!!');
+        });
+      }
+    };
+
+    // if we don't do this, then the mouse wheel will be picked up by the main
+    // grid and scroll the main grid and not this component. this ensures that
+    // the wheel move is only picked up by the text field
+    campaignPanelProductCellRenderer.prototype.consumeMouseWheelOnDetailGrid = function() {
+      var eDetailGrid = this.eGui.querySelector('.full-width-grid');
+
+      var mouseWheelListener = function(event) {
+        event.stopPropagation();
+      };
+
+      // event is 'mousewheel' for IE9, Chrome, Safari, Opera
+      eDetailGrid.addEventListener('mousewheel', mouseWheelListener);
+      // event is 'DOMMouseScroll' Firefox
+      eDetailGrid.addEventListener('DOMMouseScroll', mouseWheelListener);
+    };
+
   });
-
-
-var secondCellFormatter = function(params) {
-  return params.value.toLocaleString() + 's';
-};
-
-var detailColumnDefs = [{
-    headerName: 'Call ID',
-    field: 'callId',
-    cellClass: 'call-record-cell'
-  },
-  {
-    headerName: 'Direction',
-    field: 'direction',
-    cellClass: 'call-record-cell'
-  },
-  {
-    headerName: 'Number',
-    field: 'number',
-    cellClass: 'call-record-cell'
-  },
-  {
-    headerName: 'Duration',
-    field: 'duration',
-    cellClass: 'call-record-cell',
-    valueFormatter: secondCellFormatter
-  },
-  {
-    headerName: 'Switch',
-    field: 'switchCode',
-    cellClass: 'call-record-cell'
-  }
-];
-
-function DetailPanelCellRenderer() {}
-
-DetailPanelCellRenderer.prototype.init = function(params) {
-  // trick to convert string of html into dom object
-  var eTemp = document.createElement('div');
-  eTemp.innerHTML = this.getTemplate(params);
-  this.eGui = eTemp.firstElementChild;
-
-  this.setupDetailGrid(params.data);
-  this.consumeMouseWheelOnDetailGrid();
-  this.addSeachFeature();
-  this.addButtonListeners();
-};
-
-DetailPanelCellRenderer.prototype.setupDetailGrid = function(callRecords) {
-
-  this.detailGridOptions = {
-    enableSorting: true,
-    enableFilter: true,
-    enableColResize: true,
-    rowData: callRecords.records,
-    columnDefs: detailColumnDefs,
-    onGridReady: function(params) {
-      setTimeout(function() {
-        params.api.sizeColumnsToFit();
-      }, 0);
-    }
-  };
-
-  var eDetailGrid = this.eGui.querySelector('.full-width-grid');
-  new agGrid.Grid(eDetailGrid, this.detailGridOptions);
-};
-
-DetailPanelCellRenderer.prototype.getTemplate = function(params) {
-
-  var parentRecord = params.node.parent.data;
-
-  var template =
-    '<div class="full-width-panel">' +
-    '  <div class="full-width-details">' +
-    '    <div class="full-width-detail"><img width="120px" src="../images/team/' + parentRecord.image + '"/></div>' +
-    '    <div class="full-width-detail"><b>Name: </b>' + parentRecord.name + '</div>' +
-    '    <div class="full-width-detail"><b>Account: </b>' + parentRecord.account + '</div>' +
-    '  </div>' +
-    '  <div class="full-width-grid"></div>' +
-    '  <div class="full-width-grid-toolbar">' +
-    '       <img class="full-width-phone-icon" src="../images/phone.png"/>' +
-    '       <button><img src="../images/fire.png"/></button>' +
-    '       <button><img src="../images/frost.png"/></button>' +
-    '       <button><img src="../images/sun.png"/></button>' +
-    '       <input class="full-width-search" placeholder="Search..."/>' +
-    '  </div>' +
-    '</div>';
-
-  return template;
-};
-
-DetailPanelCellRenderer.prototype.getGui = function() {
-  return this.eGui;
-};
-
-DetailPanelCellRenderer.prototype.destroy = function() {
-  this.detailGridOptions.api.destroy();
-};
-
-DetailPanelCellRenderer.prototype.addSeachFeature = function() {
-  var tfSearch = this.eGui.querySelector('.full-width-search');
-  var gridApi = this.detailGridOptions.api;
-
-  var searchListener = function() {
-    var filterText = tfSearch.value;
-    gridApi.setQuickFilter(filterText);
-  };
-
-  tfSearch.addEventListener('input', searchListener);
-};
-
-DetailPanelCellRenderer.prototype.addButtonListeners = function() {
-  var eButtons = this.eGui.querySelectorAll('.full-width-grid-toolbar button');
-
-  for (var i = 0; i < eButtons.length; i++) {
-    eButtons[i].addEventListener('click', function() {
-      window.alert('Sample button pressed!!');
-    });
-  }
-};
-
-// if we don't do this, then the mouse wheel will be picked up by the main
-// grid and scroll the main grid and not this component. this ensures that
-// the wheel move is only picked up by the text field
-DetailPanelCellRenderer.prototype.consumeMouseWheelOnDetailGrid = function() {
-  var eDetailGrid = this.eGui.querySelector('.full-width-grid');
-
-  var mouseWheelListener = function(event) {
-    event.stopPropagation();
-  };
-
-  // event is 'mousewheel' for IE9, Chrome, Safari, Opera
-  eDetailGrid.addEventListener('mousewheel', mouseWheelListener);
-  // event is 'DOMMouseScroll' Firefox
-  eDetailGrid.addEventListener('DOMMouseScroll', mouseWheelListener);
-};
