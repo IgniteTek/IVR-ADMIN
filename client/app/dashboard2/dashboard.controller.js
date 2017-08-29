@@ -157,6 +157,20 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       headerName: 'Greeting',
       field: 'INTROPROMPT',
       maxWidth: 500
+    }, {
+      headerName: 'Rush Pricing',
+      field: 'RUSHPRICE',
+      maxWidth: 500,
+      valueGetter:function(params){
+        return params.data.RUSHPRICE?params.data.RUSHPRICE:'None';
+      }
+    }, {
+      headerName: 'Warranty Pricing',
+      field: 'WARRANTYPRICE',
+      maxWidth: 500,
+      valueGetter:function(params){
+        return params.data.WARRANTYPRICE?params.data.WARRANTYPRICE:'None';
+      }
     }];
 
     $scope.gridOptions2 = {
@@ -171,7 +185,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       getRowHeight: function(params) {
         var rowIsDetailRow = params.node.level === 1;
         // return 100 when detail row, otherwise return 25
-        return rowIsDetailRow ? 200 : 25;
+        return rowIsDetailRow ? 400 : 25;
       },
       isFullWidthCell: function(rowNode) {
         var rowIsNestedRow = rowNode.flower;
@@ -247,15 +261,8 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
             }
           })
           .on('success.form.bv', function(e) {
-            //    $('#contact_form').data('bootstrapValidator').resetForm();
-
-            // Prevent form submission
             e.preventDefault();
-
-            // Get the form instance
             var $form = $(e.target);
-
-            // Get the BootstrapValidator instance
             var bv = $form.data('bootstrapValidator');
             var form = $form.serialize();
             form = form + '&companyId=' + authservice.userSessionData.accountid;
@@ -267,7 +274,6 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
                 bv.updateStatus('product_name', 'INVALID', 'blank');
                 bv.updateStatus('item_code', 'INVALID', 'blank');
                 bv.updateStatus('sku_code', 'INVALID', 'blank');
-
               }
             }, 'json');
           });
@@ -281,7 +287,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
 
 
 
-    var detailColumnDefs = [{
+    var productDetailColumnDefs = [{
         headerName: 'Product Name',
         field: 'PRODUCTNAME',
         cellClass: 'call-record-cell'
@@ -313,6 +319,13 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       }
     ];
 
+    var phoneDetailColumnDefs = [{
+        headerName: 'Phone Number',
+        field: 'DN',
+        cellClass: 'call-record-cell'
+      }
+    ];
+
     function campaignPanelProductCellRenderer() {}
 
     campaignPanelProductCellRenderer.prototype.init = function(params) {
@@ -328,21 +341,21 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
           }
         })
         .then(function(response) {
-          self.setupDetailGrid(response.data.catalog);
+          self.setupDetailGrid(response.data.catalog,response.data.phone);
           self.consumeMouseWheelOnDetailGrid();
           self.addSeachFeature();
           self.addButtonListeners();
         });
     };
 
-    campaignPanelProductCellRenderer.prototype.setupDetailGrid = function(items) {
+    campaignPanelProductCellRenderer.prototype.setupDetailGrid = function(items,phone) {
 
       this.detailGridOptions = {
         enableSorting: true,
         enableFilter: true,
         enableColResize: true,
         rowData: items,
-        columnDefs: detailColumnDefs,
+        columnDefs: productDetailColumnDefs,
         onGridReady: function(params) {
           setTimeout(function() {
             params.api.sizeColumnsToFit();
@@ -351,6 +364,21 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       };
 
       var eDetailGrid = this.eGui.querySelector('.full-width-grid');
+      new agGrid.Grid(eDetailGrid, this.detailGridOptions);
+      this.detailGridOptions = {
+        enableSorting: true,
+        enableFilter: true,
+        enableColResize: true,
+        rowData: phone,
+        columnDefs: phoneDetailColumnDefs,
+        onGridReady: function(params) {
+          setTimeout(function() {
+            params.api.sizeColumnsToFit();
+          }, 0);
+        }
+      };
+
+       eDetailGrid = this.eGui.querySelector('.full-width-details');
       new agGrid.Grid(eDetailGrid, this.detailGridOptions);
     };
 
