@@ -114,6 +114,26 @@ router.get('/RemoveCampaignItem', function(req, res) {
     });
 
 });
+router.get('/getCampaignStats', function(req, res) {
+    var params = [
+        {param: 'v_campaignId', value: req.query.campaignId},
+        {param: 'v_startDt', value: req.query.startDt},
+        {param: 'v_endDt', value: req.query.endDt}
+    ];
+    var cursors = [
+        {cursor: 'cur_result'}
+    ];
+
+    db.execProc('SIVR.getCampaignStats',
+    params,
+    cursors,
+    function(err, j) {
+        console.log('got back from execdb', j);
+        res.json(j);
+        return;
+    });
+
+});
 router.post('/addCatalogItem', function(req, res) {
     var params = [
         {param: 'v_companyId', value: req.body.companyId},
