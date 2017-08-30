@@ -70,14 +70,14 @@ router.post('/updateCampaignItem', function(req, res) {
 });
 
 
-router.get('/updateCampaign', function(req, res) {
+router.post('/updateCampaign', function(req, res) {
     var params = [
-        {param: 'v_companyId', value: req.query.companyId},
-        {param: 'v_campaignId', value: req.query.campaignId},
-        {param: 'v_campaignName', value: req.query.campaignName},
-        {param: 'v_introPrompt', value: req.query.introPrompt},
-        {param: 'v_warrantyPrice', value: req.query.warrantyPrice},
-        {param: 'v_rushPrice', value: req.query.rushPrice}
+        {param: 'v_companyId', value: req.body.companyId},
+        {param: 'v_campaignId', value: req.body.ID},
+        {param: 'v_campaignName', value: req.body.CAMPAIGNNAME},
+        {param: 'v_introPrompt', value: req.body.INTROPROMPT},
+        {param: 'v_warrantyPrice', value: req.body.WARRANTYPRICE},
+        {param: 'v_rushPrice', value: req.body.RUSHPRICE}
     ];
     var cursors = [
         {cursor: 'cur_result'},

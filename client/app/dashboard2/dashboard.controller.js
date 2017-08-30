@@ -148,7 +148,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     field: 'ID',
     minWidth: 75,
     maxWidth: 100,
-    hide:true
+    hide: true
   }, {
     headerName: 'Product Name',
     field: 'PRODUCTNAME',
@@ -193,8 +193,8 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
 
     },
     onCellValueChanged: function(event) {
-      if (event.newValue==event.oldValue) return;
-      event.data.companyId=authservice.userSessionData.accountid;
+      if (event.newValue == event.oldValue) return;
+      event.data.companyId = authservice.userSessionData.accountid;
       $.post('/api/catalog/updateCatalogItem', event.data, function(result) {
         if (result.cur_result[0].SUCCESS) {
           toastr.info('Product Updated');
@@ -218,7 +218,8 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
   }, {
     headerName: 'Campaign Name',
     field: 'CAMPAIGNNAME',
-    maxWidth: 500
+    maxWidth: 500,
+    editable: true
   }, {
     headerName: 'Campaign Status',
     field: 'CAMPAIGNSTATUS',
@@ -232,11 +233,13 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
   }, {
     headerName: 'Greeting',
     field: 'INTROPROMPT',
-    maxWidth: 500
+    maxWidth: 500,
+    editable: true
   }, {
     headerName: 'Rush Pricing',
     field: 'RUSHPRICE',
     maxWidth: 500,
+    editable: true,
     valueGetter: function(params) {
       return params.data.RUSHPRICE ? params.data.RUSHPRICE : 'None';
     }
@@ -244,6 +247,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     headerName: 'Warranty Pricing',
     field: 'WARRANTYPRICE',
     maxWidth: 500,
+    editable: true,
     valueGetter: function(params) {
       return params.data.WARRANTYPRICE ? params.data.WARRANTYPRICE : 'None';
     }
@@ -285,6 +289,29 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     },
     onCellClicked: function(cell) {
 
+    },
+
+    onCellEditingStarted: function(event) {
+      if (event.data.CAMPAIGNSTATUS!='N') {
+        toastr.error('That Campaign is Live, cannot be updated');
+        this.api.stopEditing();
+        return;
+      }
+    },
+    onCellEditingStopped: function(event) {
+
+    },
+    onCellValueChanged: function(event) {
+      if (event.newValue == event.oldValue) return;
+      event.data.companyId = authservice.userSessionData.accountid;
+      $.post('/api/catalog/updateCampaign', event.data, function(result) {
+        if (result.cur_result[0].SUCCESS) {
+          toastr.info('Campaign Updated');
+        } else {
+          toastr.error('Error Updating Campaign');
+          $scope.loadData();
+        }
+      }, 'json');
     }
   };
 
