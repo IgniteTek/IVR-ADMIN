@@ -5,59 +5,61 @@
 <html lang="en" data-ng-app="app" dir="rtl">
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
+
 <head>
-<title>Lucid CX</title>
-<base href="/"/>
-<meta charset="utf-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<meta content="" name="description"/>
-<meta content="" name="author"/>
-<!--test comment by Kyle-->
-<!-- BEGIN GLOBAL MANDATORY STYLES -->
-<link rel="stylesheet" href="content/styles/main.css">
-<link href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
-<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-<link href="bower_components/components-font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-<!-- build:css(.) styles/vendor.css -->
-<link href="bower_components/angular-toastr/dist/angular-toastr.css" rel="stylesheet" type="text/css"/>
-<link href="bower_components/angular-xeditable/dist/css/xeditable.css" rel="stylesheet">
-<link href="bower_components/ag-grid/dist/styles/ag-grid.css" rel="stylesheet">
-<link href="bower_components/ag-grid/dist/styles/theme-fresh.css" rel="stylesheet">
+  <title>Lucid CX</title>
+  <base href="/" />
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <meta content="" name="description" />
+  <meta content="" name="author" />
+  <!--test comment by Kyle-->
+  <!-- BEGIN GLOBAL MANDATORY STYLES -->
+  <link rel="stylesheet" href="content/styles/main.css">
+  <link href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+  <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link href="bower_components/components-font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  <!-- build:css(.) styles/vendor.css -->
+  <link href="bower_components/angular-toastr/dist/angular-toastr.css" rel="stylesheet" type="text/css" />
+  <link href="bower_components/angular-xeditable/dist/css/xeditable.css" rel="stylesheet">
+  <link href="bower_components/ag-grid/dist/styles/ag-grid.css" rel="stylesheet">
+  <link href="bower_components/ag-grid/dist/styles/theme-fresh.css" rel="stylesheet">
 
-<!-- endbuild -->
-<!-- END GLOBAL MANDATORY STYLES -->
-<link href="content/assets/global/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css"/>
-<link href="content/styles/layout.css" rel="stylesheet" type="text/css"/>
-<link href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css"/>
-<link rel="stylesheet" type="text/css" href="bower_components/bootstrap-daterangepicker/daterangepicker.css"/>
-<link href="/bower_components/bootstrapvalidator/dist/css/bootstrapValidator.min.css" rel="stylesheet" type="text/css" />
+  <!-- endbuild -->
+  <!-- END GLOBAL MANDATORY STYLES -->
+  <link href="content/assets/global/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css" />
+  <link href="content/styles/layout.css" rel="stylesheet" type="text/css" />
+  <link href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="bower_components/bootstrap-daterangepicker/daterangepicker.css" />
+  <link href="/bower_components/bootstrapvalidator/dist/css/bootstrapValidator.min.css" rel="stylesheet" type="text/css" />
 
-<!-- END THEME STYLES -->
+  <!-- END THEME STYLES -->
 
 
-<!-- BEGIN DYMANICLY LOADED CSS FILES(all plugin and page related styles must be loaded between GLOBAL and THEME css files ) -->
-<link id="ng_load_plugins_before"/>
-<!-- END DYMANICLY LOADED CSS FILES -->
+  <!-- BEGIN DYMANICLY LOADED CSS FILES(all plugin and page related styles must be loaded between GLOBAL and THEME css files ) -->
+  <link id="ng_load_plugins_before" />
+  <!-- END DYMANICLY LOADED CSS FILES -->
 
-<link rel="shortcut icon" href="favicon.ico"/>
+  <link rel="shortcut icon" href="favicon.ico" />
 
 
 </head>
 <!-- END HEAD -->
 
 <!-- BEGIN BODY -->
+
 <body ng-controller="MainController" ng-app="app" ng-class="" style="">
 
 
 
 
-         <!-- This is the full page main pane -->
+  <!-- This is the full page main pane -->
 
-          <!-- This is the full page main pane -->
+  <!-- This is the full page main pane -->
 
   <!-- BEGIN HEADER -->
-  <div data-ng-include="'layout/header.html'"  class="page-header" >
+  <div data-ng-include="'layout/header.html'" class="page-header">
   </div>
   <!-- END HEADER -->
   </div>
@@ -85,38 +87,40 @@
   </div>
   <!-- END CONTAINER -->
 
-   <!-- build:js(./) scripts/vendor.js -->
-   <script src="bower_components/jquery/dist/jquery.js"></script>
-   <script src="bower_components/angular/angular.min.js"></script>
-   <script src="bower_components/Chart.js/dist/Chart.js"></script>
-    <script src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
+  <!-- build:js(./) scripts/vendor.js -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/angular/angular.min.js"></script>
+  <script src="bower_components/Chart.js/dist/Chart.js"></script>
+  <script src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
 
-   <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-   <script src="bower_components/angular-messages/angular-messages.js"></script>
-   <script src="bower_components/angular-resource/angular-resource.js"></script>
-   <script src="bower_components/angular-route/angular-route.js"></script>
-   <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-   <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-   <script src="bower_components/oclazyload/dist/ocLazyLoad.min.js"></script>
-   <script src="bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
-   <script src="bower_components/angular-filter/dist/angular-filter.min.js"></script>
+  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+  <script src="bower_components/angular-messages/angular-messages.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="bower_components/oclazyload/dist/ocLazyLoad.min.js"></script>
+  <script src="bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
+  <script src="bower_components/angular-filter/dist/angular-filter.min.js"></script>
 
 
-   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-   <script src="/bower_components/bootstrapvalidator/dist/js/bootstrapValidator.min.js" type="text/javascript"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="/bower_components/bootstrapvalidator/dist/js/bootstrapValidator.min.js" type="text/javascript"></script>
 
-   <script src="bower_components/underscore/underscore.js"></script>
+  <script src="bower_components/underscore/underscore.js"></script>
 
   <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
   <script src='bower_components/ag-grid/dist/ag-grid.min.js'></script>
   <script src="bower_components/ng-csv/build/ng-csv.js" type="text/javascript"></script>
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js" type="text/javascript"></script>
-   <!-- endbuild -->
+  <!-- endbuild -->
 
 
   <!-- BEGIN PAGE LEVEL PLUGINS -->
-<script type="text/javascript" src="bower_components/moment/min/moment.min.js"></script>
-
+  <script type="text/javascript" src="bower_components/moment/min/moment.min.js"></script>
+  <script type="text/javascript" src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+  <script src="bower_components/chart.js/dist/Chart.min.js"></script>
+  <script src="bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
   <!-- END CORE JQUERY PLUGINS -->
 
   <!-- build:js(./) scripts/scripts.js -->
@@ -138,11 +142,13 @@
   <script src="blocks/authservice/authservice.module.js"></script>
   <script src="blocks/authservice/authservice.js"></script>
 
-   <!---Session Module -->
-   <script src="login/login.js"></script>
-   <script src="dashboard2/dashboard.module.js"></script>
-   <script src="dashboard2/dashboard.controller.js"></script>
-   <script src="dashboard2/dashboard.modal.controllers.js"></script>
+  <!---Session Module -->
+  <script src="login/login.js"></script>
+  <script src="dashboard2/dashboard.module.js"></script>
+  <script src="dashboard2/dashboard.controller.js"></script>
+  <script src="dashboard2/dashboard.modal.controllers.js"></script>
+  <script src="reporting/reporting.module.js"></script>
+  <script src="reporting/reporting.controller.js"></script>
 
 
   <script src="core/routes.js"></script>
@@ -151,4 +157,5 @@
   <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->
+
 </html>

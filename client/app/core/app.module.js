@@ -9,10 +9,10 @@
 
       angular
     .module('app', [
-        'app.core','app.dashboard2',
+        'app.core','app.dashboard2','app.reporting',
 
         /* Features */
-        'app.layout'
+        'app.layout','chart.js'
 
     ]);
   })();

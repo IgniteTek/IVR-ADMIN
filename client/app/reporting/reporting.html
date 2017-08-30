@@ -1,0 +1,91 @@
+<div id="spinner" ng-show="showSpinner" style="background:url(content/images/spinner.gif) no-repeat center center;width:200px;height:200px;position: fixed;top: 30%;left: 41%;z-index: 99999;"></div>
+<div class="container-fluid padding-250 sm-padding-10">
+  <!-- BEGIN SELECTION ROW -->
+  <div class="row" style=" margin-bottom: 5px;">
+    <div class="col-md-12">
+      <div class="panel panel-default border5" style=" margin-bottom: 5px;">
+        <div class="panel-body" style="background-color:#E6E6E6;">
+          <div class="row">
+            <!-- DATE SELECTION -->
+            <div class="col-md-4">
+              <h5>Date
+                <span class="semi-bold">Selected</span></h5>
+              <div id="reportrange_trends" class="btn default">
+                <i class="fa fa-calendar"></i>&#160;
+                <span></span>
+                <b class="fa fa-angle-down"></b></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="page-content">
+  <div class="container">
+    <ul class="page-breadcrumb breadcrumb">
+      <li class="active"></li>
+    </ul>
+    <div class="hide row">
+      <div style="padding:15px">
+        <select ng-change="selectTrend()" ng-model="reportingservice.currentTrend" ng-options="opt.label for opt in reportingservice.trends ">
+                <option value="">-- Please choose a Trend --</option>
+            </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet light">
+          <div class="portlet-title">
+            <div class="caption caption-md">
+              <i class="icon-bar-chart theme-font hide"></i>
+              <span class="caption-subject bold uppercase" style="color: #278AE2 !important;">Keyword Trends</span>
+            </div>
+            <div class="inputs">
+              <button ng-click="exportSelect($event,'#export_TrendCallsWithKeyword_button','lucid_TrendCallsWithKeyword')" uib-tooltip="Export CSV Data" style="float:right" type="button" class="hide btn btn-default">
+                              <span style="" class="glyphicon glyphicon-export" aria-hidden="true"></span>
+                          </button>
+              <button ng-csv="exportCSVButton('TrendCallsWithKeyword')" filename="{{exportFilename + '.csv'}}" id="export_TrendCallsWithKeyword_button" style="float:right" type="button" class="hide btn btn-default">
+                          </button>
+              <button ng-click="exportButton('TrendCallsWithKeyword')" uib-tooltip="Export PDF Data" style="float:right" type="button" class="hide btn btn-default">
+                            <span style="" class="fa fa-file-pdf-o" aria-hidden="true"></span>
+                         </button>
+            </div>
+          </div>
+          <div class="portlet-body">
+            <canvas style="background-color:#FFFFFF" id="" class="chart chart-line" chart-data="data" chart-labels="labels" chart-series="series"
+              chart-options="options" chart-legend="true" chart-click="">
+                        </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="filename_modal" class="modal fade">
+  <div class="modal-dialog" style="width:320px;height:220px;margin-top:220px">
+    <div class="modal-content" style="height:220px;">
+      <div class="modal-header" style="border-top: 4px solid #1B1E25;">
+        <div class="row">
+          <div class="col-md-6">
+            <p class="callheader">Enter FileName</p>
+          </div>
+          <div class="col-md-6" style="margin-top:7px">
+            <i data-dismiss="modal" class="fa fa-2x fa-times-circle iclose"></i>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body" style="height:120px;">
+        <div class="row" style="margin-top:30px;">
+          <input id="input_filename" ng-model="exportFilename" type="text" name="fname" style="width:270px" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="filename_ok()">OK</button>
+        <button class="btn btn-warning" type="button" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>

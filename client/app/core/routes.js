@@ -13,6 +13,9 @@
             .when('/dashboard', {
               templateUrl: 'dashboard2/dashboard.html',
               controller: 'Dashboard2Ctrl'
+            }).when('/reporting', {
+              templateUrl: 'reporting/reporting.html',
+              controller: 'ReportingCtrl'
             }).when('/', {
               templateUrl: 'dashboard2/dashboard.html',
               controller: 'Dashboard2Ctrl'
@@ -58,7 +61,30 @@
                     }
                   ]
                 }
-              })
+              }).state('reporting', {
+                  url: '/reporting',
+                  templateUrl: 'reporting/reporting.html',
+                  data: {
+                    pageTitle: 'Reporting Template'
+                  },
+                  controller: 'ReportingCtrl',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                          name: 'app',
+                          files: [
+
+                            '',
+                            'content/styles/style.css',
+                            'content/styles/pages.css',
+                            'content/styles/pages-icon.css'
+                          ]
+                        });
+                      }
+                    ]
+                  }
+                })
               .state('login', {
                 url: '/login',
                 controller: 'LoginCtrl',
