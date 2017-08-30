@@ -87,7 +87,31 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
         $scope.loadData();
       });
     };
+    $scope.addCampaignItem = function(campaignId) {
+      var Products = $scope.gridOptions.api.getSelectedRows();
+      $scope.opts = {
+        backdrop: true,
+        backdropClick: true,
+        dialogFade: false,
+        keyboard: true,
+        templateUrl: '/dashboard2/campaignItemModal.html',
+        controller: campaignItemModalInstanceCtrl,
+        resolve: {
+          items: function() {
+            return Products;
+          },
+          CampaignId:campaignId
+        } // empty storage
+      };
 
+      var modalInstance = $uibModal.open($scope.opts);
+
+      modalInstance.result.then(function() {
+        $scope.loadData();
+      }, function() {
+        $scope.loadData();
+      });
+    };
     $scope.loadData = function() {
       $http.get('api/catalog/getCatalog', {
           params: {
@@ -95,6 +119,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
           }
         })
         .then(function(response) {
+          $scope.allProducts = response.data.cur_result;
           $scope.gridOptions.api.setRowData(response.data.cur_result);
         });
       $http.get('api/catalog/getCampaigns', {
@@ -141,13 +166,15 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       virtualPaging: false,
       suppressSizeToFit: false,
       suppressCellSelection: true,
-      rowSelection: 'multiple',
+      rowSelection: 'single',
       enableColResize: true,
       suppressRowClickSelection: false,
       rowDeselection: true,
       headerHeight: 28,
       rowHeight: 33,
-
+      onViewportChanged: function() {
+        $scope.gridOptions.api.sizeColumnsToFit();
+      },
       onModelUpdated: function() {
 
       },
@@ -201,6 +228,10 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       rowDeselection: true,
       headerHeight: 28,
       rowHeight: 33,
+      angularCompileRows: true,
+      onViewportChanged: function() {
+        $scope.gridOptions2.api.sizeColumnsToFit();
+      },
       fullWidthCellRenderer: campaignPanelProductCellRenderer,
       getRowHeight: function(params) {
         var rowIsDetailRow = params.node.level === 1;
@@ -298,7 +329,9 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
             }, 'json');
           });
       }, 2000);
-      $scope.cancel = function() {
+      $scope.cancel = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         $uibModalInstance.close('cancel');
       };
     };
@@ -352,52 +385,120 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
                 toastr.success('Campaign Added');
                 $uibModalInstance.close();
               } else {
-              toastr.error('Error Adding Campaign');
+                toastr.error('Error Adding Campaign');
+                  bv.disableSubmitButtons(false);
               }
             }, 'json');
           });
       }, 2000);
-      $scope.cancel = function() {
+      $scope.cancel = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         $uibModalInstance.close('cancel');
       };
     };
 
+    var campaignItemModalInstanceCtrl = function($scope, $uibModalInstance, $uibModal) {
+      var Product=$scope.$resolve.items[0];
+      var CampaignId=$scope.$resolve.CampaignId;
+      $timeout(function() {
+        $('#addProduct').html(Product.PRODUCTNAME+' - '+Product.PRODUCTCODE+' - '+Product.SKU);
+        $('form').bootstrapValidator({
+            // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
+            feedbackIcons: {
+              valid: 'glyphicon glyphicon-ok',
+              invalid: 'glyphicon glyphicon-remove',
+              validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+              campaign_name: {
+                validators: {
+                  stringLength: {
+                    min: 2,
+                  },
+                  notEmpty: {
+                    message: 'Please supply campaign name'
+                  },
+                  blank: {
+                    message: ''
+                  }
+                }
+              },
+              introPrompt: {
+                validators: {
+                  stringLength: {
+                    min: 2,
+                  },
+                  notEmpty: {
+                    message: 'Please supply greeting'
+                  },
+                  blank: {
+                    message: ''
+                  }
+                }
+              }
+            }
+          })
+          .on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form = $(e.target);
+            var bv = $form.data('bootstrapValidator');
+            var form = $form.serialize();
+            form = form + '&campaignId=' + CampaignId;
+            form = form + '&catalogId=' + Product.ID;
+            $.post('/api/catalog/updateCampaignItem', form, function(result) {
+              if (result.cur_result[0].SUCCESS) {
+                toastr.success('Campaign Item Added');
+                $uibModalInstance.close();
+              } else {
+                toastr.error('Error Adding Campaign Item');
+                bv.disableSubmitButtons(false);
+              }
+            }, 'json');
+          });
+      }, 1000);
+      $scope.cancel = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $uibModalInstance.close('cancel');
+      };
+    };
     var productDetailColumnDefs = [{
         headerName: 'Product Name',
         field: 'PRODUCTNAME',
-        cellClass: 'call-record-cell'
+        cellClass: 'item-record-cell'
       },
       {
         headerName: 'Item Code',
         field: 'PRODUCTCODE',
-        cellClass: 'call-record-cell'
+        cellClass: 'item-record-cell'
       },
       {
         headerName: 'SKU',
         field: 'SKU',
-        cellClass: 'call-record-cell'
+        cellClass: 'item-record-cell'
       },
       {
         headerName: 'Price',
         field: 'UNITPRICE',
-        cellClass: 'call-record-cell'
+        cellClass: 'item-record-cell'
       },
       {
         headerName: 'Shipping',
         field: 'UNITSHIPPING',
-        cellClass: 'call-record-cell'
+        cellClass: 'item-record-cell'
       },
       {
         headerName: 'Max Quantity',
         field: 'MAXQTY',
-        cellClass: 'call-record-cell'
+        cellClass: 'item-record-cell'
       }
     ];
 
     var phoneDetailColumnDefs = [{
       headerName: 'Phone Number',
       field: 'DN',
-      cellClass: 'call-record-cell'
+      cellClass: 'item-record-cell'
     }];
 
     function campaignPanelProductCellRenderer() {}
@@ -467,7 +568,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
         '  <div class="full-width-grid"></div>' +
         '  <div class="full-width-grid-toolbar">' +
         '       <img class="hide full-width-phone-icon" src="../images/phone.png"/>' +
-        '       <button class="hide"><img src="../images/fire.png"/></button>' +
+        '       <button ng-click="addCampaignItem(' + params.node.parent.data.ID + ')" tooltip-popup-delay="500" uib-tooltip="Add Campaign Item" class="" style="float: right;margin-left: 30px;">  <span style="" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>' +
         '       <button class="hide"><img src="../images/frost.png"/></button>' +
         '       <button class="hide"><img src="../images/sun.png"/></button>' +
         '       Products In Campaign <input class="full-width-search" placeholder="Search"/>' +
@@ -502,7 +603,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
 
       for (var i = 0; i < eButtons.length; i++) {
         eButtons[i].addEventListener('click', function() {
-          window.alert('Sample button pressed!!');
+          //window.alert('Sample button pressed!!');
         });
       }
     };
@@ -522,5 +623,8 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       // event is 'DOMMouseScroll' Firefox
       eDetailGrid.addEventListener('DOMMouseScroll', mouseWheelListener);
     };
-
+    window.onresize = function() {
+      $scope.gridOptions.api.sizeColumnsToFit();
+      $scope.gridOptions2.api.sizeColumnsToFit();
+    };
   });

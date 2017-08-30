@@ -45,13 +45,13 @@ router.post('/createCampaign', function(req, res) {
 
 });
 
-router.get('/UpdateCampaignItem', function(req, res) {
+router.post('/updateCampaignItem', function(req, res) {
     var params = [
-        {param: 'v_campaignId', value: req.query.campaignId},
-        {param: 'v_catalogId', value: req.query.catalogId},
-        {param: 'v_maxQty', value: req.query.maxQty},
-        {param: 'v_unitPrice', value: req.query.unitPrice},
-        {param: 'v_unitShipping', value: req.query.unitShipping},
+        {param: 'v_campaignId', value: req.body.campaignId},
+        {param: 'v_catalogId', value: req.body.catalogId},
+        {param: 'v_maxQty', value: req.body.quantity},
+        {param: 'v_unitPrice', value: req.body.unitPrice},
+        {param: 'v_unitShipping', value: req.body.unitShipping},
     ];
     var cursors = [
         {cursor: 'cur_result'},

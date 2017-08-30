@@ -1,0 +1,39 @@
+<div class="modal-header" style="background-color: #fff;border-bottom: 1px solid #e5e5e5;">
+  <h3 class="modal-title" id="modal-title">Add a Campaign Item</h3>
+</div>'
+<div class="modal-body" style="height:400px;">
+    <h4> Adding <span id="addProduct"></span></h4>
+  <form id="product" role="form" novalidate>
+    <div class="form-group">
+      <label>Max Quantity</label>
+      <div class="inputGroupContainer">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
+          <input data-bv-excluded name="quantity" type="number" placeholder="" class="form-control" required>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Unit Price</label>
+      <div class="inputGroupContainer">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
+          <input data-bv-excluded name="unitPrice" type="number" placeholder="" class="form-control" required>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Unit Shipping</label>
+      <div class="inputGroupContainer">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
+          <input data-bv-excluded name="unitShipping" type="number" placeholder="" class="form-control" required>
+        </div>
+      </div>
+    </div>
+    <button type="submit" id="" class="btn btn-complete btn-cons pull-right">Add Campaign Item</button>
+    <button type="close" class="btn btn-warning pull-right" ng-click="cancel($event);">Cancel</button>
+  </form>
+</div>
+<div class="modal-footer">
+</div>
