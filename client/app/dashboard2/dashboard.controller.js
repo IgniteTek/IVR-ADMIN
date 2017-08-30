@@ -290,7 +290,6 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     onCellClicked: function(cell) {
 
     },
-
     onCellEditingStarted: function(event) {
       if (event.data.CAMPAIGNSTATUS!='N') {
         toastr.error('That Campaign is Live, cannot be updated');
@@ -333,16 +332,19 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     {
       headerName: 'Price',
       field: 'UNITPRICE',
+      editable: true,
       cellClass: 'item-record-cell'
     },
     {
       headerName: 'Shipping',
       field: 'UNITSHIPPING',
+      editable: true,
       cellClass: 'item-record-cell'
     },
     {
       headerName: 'Max Quantity',
       field: 'MAXQTY',
+      editable: true,
       cellClass: 'item-record-cell'
     }
   ];
@@ -368,14 +370,14 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
         }
       })
       .then(function(response) {
-        self.setupDetailGrid(response.data.catalog, response.data.phone);
+        self.setupDetailGrid(response.data.catalog, response.data.phone,params.node.parent.data.CAMPAIGNSTATUS,params.node.parent.data.ID);
         self.consumeMouseWheelOnDetailGrid();
         self.addSeachFeature();
       });
   };
 
-  campaignPanelProductCellRenderer.prototype.setupDetailGrid = function(items, phone) {
-
+  campaignPanelProductCellRenderer.prototype.setupDetailGrid = function(items, phone,status,campaign) {
+    this.status=status;
     this.detailGridOptions = {
       enableSorting: true,
       enableFilter: true,
@@ -386,6 +388,31 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
         setTimeout(function() {
           params.api.sizeColumnsToFit();
         }, 0);
+      },
+      onCellEditingStarted: function(event) {
+        if (status!='N') {
+          toastr.error('Campaign is Live, cannot be updated');
+          this.api.stopEditing();
+          return;
+        }
+      },
+      onCellValueChanged: function(event) {
+        if (event.newValue == event.oldValue) return;
+        event.data.companyId = authservice.userSessionData.accountid;
+        event.data.campaignId = campaign;
+        event.data.catalogId =event.data.CATALOGID;
+        event.data.quantity =event.data.MAXQTY;
+        event.data.unitPrice =event.data.UNITPRICE;
+        event.data.unitShipping =event.data.UNITSHIPPING;
+
+        $.post('/api/catalog/updateCampaignItem', event.data, function(result) {
+          if (result.cur_result[0].SUCCESS) {
+            toastr.info('Campaign Updated');
+          } else {
+            toastr.error('Error Updating Campaign </br>Must supply maxQty>0, unit price and shipping price',{allowHtml:true});
+            $scope.loadData();
+          }
+        }, 'json');
       }
     };
 
