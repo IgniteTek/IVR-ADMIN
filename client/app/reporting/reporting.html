@@ -15,6 +15,14 @@
                 <span></span>
                 <b class="fa fa-angle-down"></b></div>
             </div>
+            <div class="col-md-4">
+              <div class="row">
+              <h5>Select a <span class="semi-bold">Campaign to View</span></h5></div>
+              <div class="row">
+                <select style="width: 100%;height: 40px;" ng-change="loadData()" ng-model="campaignSelected" ng-options="obj.id as obj.text for obj in OptionArray">
+            <option value="">Please Select Campaign</option>
+          </select> </div>
+            </div>
           </div>
         </div>
       </div>
@@ -40,7 +48,7 @@
           <div class="portlet-title">
             <div class="caption caption-md">
               <i class="icon-bar-chart theme-font hide"></i>
-              <span class="caption-subject bold uppercase" style="color: #278AE2 !important;">Keyword Trends</span>
+              <span class="caption-subject bold uppercase" style="color: #278AE2 !important;">Call/Order Trends</span>
             </div>
             <div class="inputs">
               <button ng-click="exportSelect($event,'#export_TrendCallsWithKeyword_button','lucid_TrendCallsWithKeyword')" uib-tooltip="Export CSV Data" style="float:right" type="button" class="hide btn btn-default">
@@ -54,14 +62,49 @@
             </div>
           </div>
           <div class="portlet-body">
-            <canvas style="background-color:#FFFFFF" id="" class="chart chart-line" chart-data="data" chart-labels="labels" chart-series="series"
-              chart-options="options" chart-legend="true" chart-click="">
+            <div class="row">
+              <div class="col-md-12">
+                <canvas style="background-color:#FFFFFF" id="" class="chart chart-line" chart-data="data" chart-labels="labels" chart-series="series" chart-options="options" chart-legend="true" chart-click="">
                         </canvas>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-12">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet light">
+          <div class="portlet-title">
+            <div class="caption caption-md">
+              <i class="icon-bar-chart theme-font hide"></i>
+              <span class="caption-subject bold uppercase" style="color: #278AE2 !important;">Call/Order Grid</span>
+            </div>
+            <div class="inputs">
+              <button ng-click="exportSelect($event,'#export_TrendCallsWithKeyword_button','lucid_TrendCallsWithKeyword')" uib-tooltip="Export CSV Data" style="float:right" type="button" class="hide btn btn-default">
+                                <span style="" class="glyphicon glyphicon-export" aria-hidden="true"></span>
+                            </button>
+              <button ng-csv="exportCSVButton('TrendCallsWithKeyword')" filename="{{exportFilename + '.csv'}}" id="export_TrendCallsWithKeyword_button" style="float:right" type="button" class="hide btn btn-default">
+                            </button>
+              <button ng-click="exportButton('TrendCallsWithKeyword')" uib-tooltip="Export PDF Data" style="float:right" type="button" class="hide btn btn-default">
+                              <span style="" class="fa fa-file-pdf-o" aria-hidden="true"></span>
+                           </button>
+            </div>
+          </div>
+          <div class="portlet-body">
+            <div class="row">
+              <div class="col-md-12">
+                <div ag-grid="gridOptions" class="ag-fresh" style="height: 550px;width:100%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
+</div>
 </div>
 <div id="filename_modal" class="modal fade">
   <div class="modal-dialog" style="width:320px;height:220px;margin-top:220px">
