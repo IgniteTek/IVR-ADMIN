@@ -136,13 +136,13 @@ router.post('/addCatalogItem', function(req, res) {
     });
 
 });
-router.get('/updateCatalogItem', function(req, res) {
+router.post('/updateCatalogItem', function(req, res) {
     var params = [
-        {param: 'v_catalogId', value: req.query.catalogId},
-        {param: 'v_companyId', value: req.query.companyId},
-        {param: 'v_productName', value: req.query.productName},
-        {param: 'v_productCode', value: req.query.productCode},
-        {param: 'v_sku', value: req.query.sku},
+        {param: 'v_catalogId', value: req.body.ID},
+        {param: 'v_companyId', value: req.body.companyId},
+        {param: 'v_productName', value: req.body.PRODUCTNAME},
+        {param: 'v_productCode', value: req.body.PRODUCTCODE},
+        {param: 'v_sku', value: req.body.SKU},
     ];
     var cursors = [
         {cursor: 'cur_result'},
