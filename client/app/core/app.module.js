@@ -12,7 +12,7 @@
         'app.core','app.dashboard2','app.reporting',
 
         /* Features */
-        'app.layout','chart.js'
+        'app.layout',
 
     ]);
   })();
