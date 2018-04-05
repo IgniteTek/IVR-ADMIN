@@ -68,7 +68,7 @@ router.post('/loginUser', function(req, res) {
         // The statement to execute
         'call SIVR.login(:v_userName, :v_password,:cur_result)', bindVars,
         function(err, result) {
-          console.error(err);
+          //console.error(err);
           if (err) {
             res.status(401).json({
               error: 'DB error',
@@ -136,19 +136,20 @@ router.post('/loginUser', function(req, res) {
 
 
 router.post('/createAccount', function(req, res) {
-  console.log(req.body);
-  if (!req.body.user_name || !req.body.password) {
+  //console.log(req.body);
+  debugger;
+  if (!req.body.params.data.userName || !req.body.params.data.password) {
     res.json({
       error: 'Must provide user name and password'
     });
     res.end();
     return;
   }
-  var password = Encryption.Encrypt(req.body.password);
-
+  var password = Encryption.Encrypt(req.body.params.data.password);
+  
   var params = [{
       param: 'v_userName',
-      value: req.body.user_name
+      value: req.body.params.data.userName
     },
     {
       param: 'v_password',
@@ -156,23 +157,23 @@ router.post('/createAccount', function(req, res) {
     },
     {
       param: 'v_email',
-      value: req.body.email
+      value: req.body.params.data.email
     },
     {
       param: 'v_companyName',
-      value: req.body.company_name
+      value: req.body.params.data.companyName
     },
     {
       param: 'v_phoneNumber',
-      value: req.body.phone
+      value: req.body.params.data.phone ? req.body.params.data.phone : null
     },
     {
       param: 'v_firstName',
-      value: req.body.first_name
+      value: req.body.params.data.firstName
     },
     {
       param: 'v_lastName',
-      value: req.body.last_name
+      value: req.body.params.data.lastName
     }
   ];
   var cursors = [{
@@ -186,7 +187,7 @@ router.post('/createAccount', function(req, res) {
     params,
     cursors,
     function(err, j) {
-      console.log(err);
+      //console.log(err);
       if (err || j.cur_result2.length == 0) {
         res.json({
           success: false,

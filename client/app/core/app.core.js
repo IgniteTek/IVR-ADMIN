@@ -9,7 +9,7 @@
         .module('app.core', [
 
         //blocks
-            'blocks.authservice', 'blocks.services',
+            'blocks.authservice', 'blocks.services', 
         //ng
             'ngCookies', 'ngMessages',
             'ngResource', 'ngRoute', 'ngSanitize',
@@ -21,7 +21,7 @@
         ])
     /* Setup App Main Controller */
         .controller('MainController', ['$scope', '$rootScope', 'authservice', 'toastr', '$http',
-        function($scope, $rootScope, authservice, toastr, $http) {
+        function($scope, $rootScope, authservice,  toastr, $http) {
             $scope.$on('$viewContentLoaded', function() {});
             $scope.redirectToLogin = function() {
                 var userid = authservice.userSessionData.userid;
@@ -69,9 +69,9 @@
     }
 
 
-    runBlock.$inject = ['$rootScope', 'settings', '$state', 'authservice', '$location', '$window'];
+    runBlock.$inject = ['$rootScope', 'settings', '$state', 'authservice',  '$location', '$window'];
 
-    function runBlock($rootScope, settings, $state, authservice, $location, $window) {
+    function runBlock($rootScope, settings, $state, authservice,  $location, $window) {
         $rootScope.$state = $state; // state to be accessed from view
         $rootScope.settings = settings;
         $rootScope.timeout = false;

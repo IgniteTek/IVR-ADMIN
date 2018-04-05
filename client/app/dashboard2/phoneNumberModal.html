@@ -1,0 +1,32 @@
+<div class="modal-header" style="background-color: #fff;border-bottom: 1px solid #e5e5e5;">
+  <h3 class="modal-title" id="modal-title">Phone Numbers</h3>
+</div>'
+<div class="modal-body" style="height:400px;">
+    <button class="btn btn-default" ng-click="requestNumber()">Get New Number</button>
+    <div class="table-responsive">          
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Number</th>
+                  <th>Assigned To</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="number in allNumbers">
+                  <td>{{ number.DN }}</td>
+                  <td>{{ number.CAMPAIGN_NAME ? number.CAMPAIGN_NAME : "UnAssigned" }}</td>
+                  <td><button class="releaseButton" ng-click="releaseNumber(number)" tooltip-popup-delay="500" uib-tooltip="Release Number"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></td>
+                  <td ng-show="!number.CAMPAIGN_NAME"><select ng-model="data.campaign">
+                        <option ng-repeat="campaign in campaignData" ng-value="campaign.ID">{{campaign.CAMPAIGNNAME}}</option>
+                      </select>
+                      <button class="assignButton" ng-click="assignNumber(number)" ng-show="!number.CAMPAIGN_NAME" tooltip-popup-delay="500" uib-tooltip="Assign Number"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+            
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="cancel($event)">Close</button>
+</div>

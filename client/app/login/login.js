@@ -12,7 +12,7 @@ angular.module('app')
       }
 
 
-      $scope.$on('$viewContentLoaded', function() {
+      $scope.$on('$viewContentLoaded', function () {
         if ($scope.change_password == false && authservice.reConnect()) {
           $location.path('/');
         }
@@ -23,23 +23,25 @@ angular.module('app')
           credentials.data.userName = localStorage.getItem('user_name');
           credentials.data.password = localStorage.getItem('user_name_password');
           $scope.login(credentials, null);
-          authservice.settings.newaccount=true;
+          authservice.settings.newaccount = true;
         }
       });
 
       $scope.credentials = {
         data: {}
       };
+      $scope.newUser = {};
+
       if ($cookies.get('username') != undefined && $cookies.get('username').length > 1) {
         $scope.credentials.data.userName = $cookies.get('username');
       }
 
-      $scope.goBack = function() {
+      $scope.goBack = function () {
         $window.history.back();
       };
       $scope.password1 = '';
       $scope.password2 = '';
-      $scope.submitPassword = function() {
+      $scope.submitPassword = function () {
 
         if ($scope.password1 != $scope.password2) {
           toastr.error('Passwords do not match');
@@ -50,12 +52,12 @@ angular.module('app')
           return;
         }
         $http.post('api/login/changePassword', {
-            params: {
-              password: $scope.password1,
-              userid: authservice.userSessionData.userid
-            }
-          })
-          .then(function(response) {
+          params: {
+            password: $scope.password1,
+            userid: authservice.userSessionData.userid
+          }
+        })
+          .then(function (response) {
             if (response.data.success) {
               toastr.info('Password Changed');
               authservice.logout();
@@ -64,11 +66,11 @@ angular.module('app')
             }
           });
       };
-      $scope.displayBeta = function() {
+      $scope.displayBeta = function () {
         var x = window.location.href.indexOf('www.lucid');
         return x == -1;
       };
-      $scope.login = function(credentials, event) {
+      $scope.login = function (credentials, event) {
         completeLogin();
 
 
@@ -79,12 +81,12 @@ angular.module('app')
             });
           }
           $http.post('api/login/loginUser', {
-              params: {
-                user: credentials.data.userName,
-                password: credentials.data.password,
-                orgid: credentials.data.orgid
-              }
-            })
+            params: {
+              user: credentials.data.userName,
+              password: credentials.data.password,
+              orgid: credentials.data.orgid
+            }
+          })
             .then(loginResponse)
             .catch(loginError);
         }
@@ -135,6 +137,30 @@ angular.module('app')
 
         }
       };
+      $scope.createNewUser = function(newUser, $event){
+        
+        if(newUser.password == newUser.rPassword){
+          $scope.credentials.data.userName = $scope.newUser.userName;
+          $scope.credentials.data.password = $scope.newUser.password;
+          $http.post('api/login/createAccount', {
+            params: {
+              data: newUser
+            }
+          }).then(function(response){
+            if(response.data.success){
+              toastr.success('Done');
+              $scope.login($scope.credentials, null);
+              $scope.newUser = {};
+            }else{
+              toastr.error('something went wrong, Please try again');
+            }
+          });
+        }else{
+          toastr.error('Password did not match');
+        }
+       
+       
+      }
 
 
     }

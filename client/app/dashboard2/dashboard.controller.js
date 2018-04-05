@@ -84,6 +84,49 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       $scope.loadData();
     });
   };
+  $scope.showPhoneNumbers = function() {
+    $http.get('api/catalog/getCompanyPhoneNumbers', {
+      params: {
+        companyId: authservice.userSessionData.accountid
+      }
+    })
+    .then(function(response) {
+      $scope.allCompanyNumbers = response.data.phone;
+      $scope.opts = {
+        backdrop: true,
+        backdropClick: true,
+        dialogFade: false,
+        keyboard: true,
+        templateUrl: '/dashboard2/phoneNumberModal.html',
+        controller: 'phoneNumberModalInstanceCtrl',
+        resolve: {
+          items: function() {
+            var array = [];
+            array.push($scope.allCompanyNumbers);
+            array.push($scope.campaignData);
+            return array;
+          },
+        } // empty storage
+      };
+      var modalInstance = $uibModal.open($scope.opts);
+
+      modalInstance.result.then(function() {
+      //$scope.loadData();
+        }, function() {
+      //$scope.loadData();
+      });
+    });
+  };
+  $scope.getCompanyPhoneNumbers = function(){
+    $http.get('api/catalog/getCompanyPhoneNumbers', {
+      params: {
+        companyId: authservice.userSessionData.accountid
+      }
+    })
+    .then(function(response) {
+      $scope.allCompanyNumbers = response.data.cur_result;
+    });
+  }
   $scope.addCampaignItem = function(campaignId) {
     var Products = $scope.gridOptions.api.getSelectedRows();
     if (Products.length == 0) {
@@ -132,6 +175,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
         response.data.cur_result.forEach(function(campaign, index, result) {
           result[index].items = {};
         });
+        $scope.campaignData = response.data.cur_result;
         $scope.gridOptions2.api.setRowData(response.data.cur_result);
       });
   };

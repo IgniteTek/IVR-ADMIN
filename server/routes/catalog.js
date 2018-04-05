@@ -55,7 +55,8 @@ router.post('/createCampaign', function(req, res) {
     params,
     cursors,
     function(err, j) {
-      console.log('got back from execdb', j);
+     // console.log('got back from execdb', j);
+      console.log('got back from execdb SIVR.createCampaign');
       res.json(j);
       return;
     });
@@ -195,8 +196,55 @@ router.get('/getCampaignStats', function(req, res) {
   var cursors = [{
     cursor: 'cur_result'
   }];
-
+  debugger;
   db.execProc('SIVR.getCampaignStats',
+    params,
+    cursors,
+    function(err, j) {
+     // console.log('got back from execdb', j);
+      console.log('got back from execdb');
+      debugger;
+      res.json(j);
+      return;
+    });
+
+});
+router.post('/addCatalogItem', function(req, res) {
+  debugger;
+  var params = [{
+    param: 'v_companyId',
+    value: req.body.companyId
+  },
+  {
+    param: 'v_productName',
+    value: req.body.product_name
+  },
+  {
+    param: 'v_productCode',
+    value: req.body.item_code
+  },
+  {
+    param: 'v_sku',
+    value: req.body.sku_code
+  },
+  {
+    param: 'v_variants',
+    value: req.body.attributes
+  },
+  {
+    param: 'v_prompt',
+    value: req.body.greeting
+  },
+  
+];
+var cursors = [{
+    cursor: 'cur_result'
+  },
+  {
+    cursor: 'cur_result2'
+  }
+];
+db.execProc('SIVR.addCatalogItem',
     params,
     cursors,
     function(err, j) {
@@ -204,9 +252,9 @@ router.get('/getCampaignStats', function(req, res) {
       res.json(j);
       return;
     });
-
+  
 });
-router.post('/addCatalogItem', function(req, res) {
+/*router.post('/addCatalogItem', function(req, res) {
   var params = [{
       param: 'v_companyId',
       value: req.body.companyId
@@ -241,7 +289,7 @@ router.post('/addCatalogItem', function(req, res) {
       return;
     });
 
-});
+});*/
 router.post('/updateCatalogItem', function(req, res) {
   var params = [{
       param: 'v_catalogId',
@@ -283,6 +331,7 @@ router.post('/updateCatalogItem', function(req, res) {
 
 });
 router.get('/getCatalog', function(req, res) {
+  debugger;
   var params = [{
     param: 'v_companyId',
     value: req.query.companyId
@@ -295,13 +344,133 @@ router.get('/getCatalog', function(req, res) {
     params,
     cursors,
     function(err, j) {
-      console.log('got back from execdb', j);
+      //console.log('got back from execdb', j);
+      console.log('got back from execdb SIVR.getCompanyCatalog');
       res.json(j);
       return;
     });
 
 });
 
+router.get('/getCompanyPhoneNumbers', function(req, res) {
+  debugger;
+  var params = [{
+    param: 'v_companyId',
+    value: req.query.companyId
+  }];
+  var cursors = [{
+      cursor: 'phone'
+    }
+  ];
+
+  db.execProc('SIVR.getCompanyPhoneNumbers',
+    params,
+    cursors,
+    function(err, j) {
+      debugger;
+      console.log('got back from execdb', j);
+      //console.log('got back from execdb SIVR.getCompanyPhoneNumbers');
+      res.json(j);
+      return;
+    });
+
+});
+
+router.get('/requestPhoneNumber', function(req, res) {
+  debugger;
+  var params = [{
+    param: 'v_companyId',
+    value: req.query.companyId
+  }];
+  var cursors = [{
+      cursor: 'phone'
+    }
+  ];
+
+  db.execProc('SIVR.requestPhoneNumber',
+    params,
+    cursors,
+    function(err, j) {
+      debugger;
+      console.log('got back from execdb', j);
+      //console.log('got back from execdb SIVR.getCompanyPhoneNumbers');
+      res.json(j);
+      return;
+    });
+
+});
+
+router.get('/releasePhoneNumber', function(req, res) {
+  debugger;
+  var params = [{
+    param: 'v_companyId',
+    value: req.query.companyId
+  },{
+    param: 'v_DN',
+    value: req.query.number
+  } ];
+  var cursors = [
+      
+  ];
+
+  db.execProc('SIVR.releasePhoneNumber',
+    params,
+    cursors,
+    function(err, j) {
+      debugger;
+      if(err){
+        var result = {};
+        result.success = false;
+        res.json(result);
+        return;
+      }else{
+        var result = {};
+        result.success = true;
+        res.json(result);
+        return;
+      }
+    });
+
+});
+
+router.get('/assignPhoneNumber', function(req, res) {
+  debugger;
+  var params = [{
+    param: 'v_companyId',
+    value: req.query.companyId
+  },{
+    param: 'v_DN',
+    value: req.query.number
+  },{
+    param: 'v_campaignId',
+    value: req.query.campaignId
+  }];
+  var cursors = [
+      
+  ];
+
+  db.execProc('SIVR.assignPhoneNumber',
+    params,
+    cursors,
+    function(err, j) {
+      debugger;
+      //console.log('got back from execdb', j);
+      //console.log('got back from execdb SIVR.getCompanyPhoneNumbers');
+      if(err){
+        var result = {};
+        result.success = false;
+        res.json(result);
+        return;
+      }else{
+        var result = {};
+        result.success = true;
+        res.json(result);
+        return;
+      }
+      
+    });
+
+});
 router.get('/getCampaign', function(req, res) {
   var params = [{
     param: 'v_campaignId',
@@ -322,7 +491,8 @@ router.get('/getCampaign', function(req, res) {
     params,
     cursors,
     function(err, j) {
-      console.log('got back from execdb', j);
+     // console.log('got back from execdb', j);
+      console.log('got back from execdb SIVR.getCampaignDetails');
       res.json(j);
       return;
     });
@@ -342,7 +512,8 @@ router.get('/getCampaigns', function(req, res) {
     params,
     cursors,
     function(err, j) {
-      console.log('got back from execdb', j);
+     // console.log('got back from execdb', j);
+      console.log('got back from execdb SIVR.getCompanyCampaigns');
       res.json(j);
       return;
     });

@@ -642,11 +642,11 @@ div.dataTables_filter label {
   font-size: 12px;
 }
 
-.dataTables_length {}
+
 
 .modal .modal-header {
   padding: 0px !important;
-  */
+  
 }
 
 .padding-25 {
@@ -1434,8 +1434,27 @@ svg.nvd3-svg g.nvd3.nv-wrap.nv-lineChart g g.nv-scatterWrap.nvd3-svg path.nv-poi
   background-color: red;
 }
 .newaccountBallon {
-  background-color: :red!important
+  background-color: red!important
 }
-.newaccountBallon > .{
-  background-color: :red!important
+.newaccountBallon  {
+  background-color: rgb(252, 7, 7)!important
+}
+.releaseButton{
+  border-width: 0px!important;
+  color: rgb(245, 7, 7) !important;
+}
+.releaseButton  :hover{
+  
+  border-width: thin; 
+  border-color: red;
+  border-radius: 3%;
+}
+.assignButton {
+  border-width: 0px!important;
+  margin-left: 3px;
+  margin-right: 1px;
+  color: rgb(5, 209, 5) !important;
+}
+.assignButton :hover{
+  color: rgb(5, 209, 5) !important;
 }
