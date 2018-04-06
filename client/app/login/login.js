@@ -152,7 +152,7 @@ angular.module('app')
               $scope.login($scope.credentials, null);
               $scope.newUser = {};
             }else{
-              toastr.error('something went wrong, Please try again');
+              toastr.error('Email is already in use');
             }
           });
         }else{

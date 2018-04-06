@@ -2,96 +2,61 @@
 /*global angular,$*/
 
 angular.module('app.dashboard2').controller('productModalInstanceCtrl', function($rootScope, $uibModal, $uibModalInstance, $scope, $http, $interval, $timeout, $location, $compile, $sce, authservice, toastr, $q) {
-  /*$timeout(function() {
-    $('form').bootstrapValidator({
-        // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
-        feedbackIcons: {
-          valid: 'glyphicon glyphicon-ok',
-          invalid: 'glyphicon glyphicon-remove',
-          validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-          product_name: {
-            validators: {
-              stringLength: {
-                min: 2,
-              },
-              notEmpty: {
-                message: 'Please supply product name'
-              },
-              blank: {
-                message: 'Duplicate Product'
-              }
-            }
-          },
-          item_code: {
-            validators: {
-              stringLength: {
-                min: 2,
-              },
-              notEmpty: {
-                message: 'Please supply item code'
-              },
-              blank: {
-                message: 'Duplicate Product'
-              }
-            }
-          },
-          sku_code: {
-            validators: {
-              stringLength: {
-                min: 2,
-              },
-              notEmpty: {
-                message: 'Please supply SKU code'
-              },
-              blank: {
-                message: 'Duplicate Product'
-              }
-            }
-          }
-
-        }
-      })
-      .on('success.form.bv', function(e) {
-        e.preventDefault();
-        var $form = $(e.target);
-        var bv = $form.data('bootstrapValidator');
-        var form = $form.serialize();
-        form = form + '&companyId=' + authservice.userSessionData.accountid;
-        // $.post('/api/catalog/addCatalogItem', form, function(result) {
-        //   if (result.cur_result[0].SUCCESS) {
-        //     toastr.success('Product Added');
-        //     $uibModalInstance.close();
-        //   } else {
-        //     bv.updateStatus('product_name', 'INVALID', 'blank');
-        //     bv.updateStatus('item_code', 'INVALID', 'blank');
-        //     bv.updateStatus('sku_code', 'INVALID', 'blank');
-        //   }
-        // }, 'json');
-      });
-  }, 2000);*/
+  
   $scope.newProduct = {};
   $scope.attributes= [];
+  
+  $scope.editableProduct = $scope.$resolve.items ? $scope.$resolve.items : [];
 
   $scope.cancel = function(e) {
     $scope.newProduct = {};
     $scope.attributes = [];
+    $scope.editableProduct = [];
+    $scope.editMode = false;
     e.preventDefault();
     e.stopPropagation();
     $uibModalInstance.close('cancel');
   };
   
-  $scope.variants = [{
-    id: 'variant1',
-    name: 'choice1',
-    prompt: 'Enter Promt',
-    values: [{
-      value: 'red',
-      skuCode: '1234',
-      sku_suffix: '-red'
-    }]
-  }];
+  if($scope.editableProduct.length <= 0){
+    $scope.editMode = false;
+    $scope.variants = [{
+      id: 'variant1',
+      name: 'choice1',
+      prompt: 'Enter Promt',
+      values: [{
+        value: 'red',
+        skuCode: '1234',
+        sku_suffix: '-red'
+      }]
+    }];
+  }else{
+    $scope.editMode = true;
+    $scope.variants = JSON.parse($scope.editableProduct[0].PRODUCT_VARIANTS);
+  }
+
+  $scope.displayProduct = function(){
+    $scope.newProduct.product_name = $scope.editableProduct[0].PRODUCTNAME;
+    $scope.newProduct.item_code = $scope.editableProduct[0].PRODUCTCODE;
+    $scope.newProduct.greeting = $scope.editableProduct[0].PRODUCT_PROMPT;
+    $scope.newProduct.sku_code = $scope.editableProduct[0].SKU;
+    $('.eachVariant').each(function(i, d){
+      $(d).children().find('.eachVariantName').val($scope.variants[i].name);
+      $(d).children().find('.eachVariantPromt').val($scope.variants[i].prompt);
+      var eachValueChild = $(d).children().find('.eachVariantValues');
+      eachValueChild.each(function (j, e) {
+        $(e).children().find('.eachVariantValue').val($scope.variants[i].values[j].val);
+        $(e).children().find('.eachVariantSku').val("");
+        $(e).children().find('.eachVariantSkuSuffix').val($scope.variants[i].values[j].sku_siffix)
+      });
+    });
+
+  }
+  if($scope.editMode){
+    setTimeout(function () { $scope.displayProduct(); }, 0);
+  }
+  
+  
    
   $scope.addNewVariant = function () {
     var newItemNo = $scope.variants.length + 1;
@@ -137,7 +102,25 @@ angular.module('app.dashboard2').controller('productModalInstanceCtrl', function
   }
    };
    
-   $scope.saveNewProduct = function(){
+   $scope.editProduct = function(){
+    $scope.gatherData();
+    $scope.newProduct.ID = $scope.editableProduct[0].ID;
+
+    $.post('/api/catalog/updateCatalogItem', $scope.newProduct, function(result) {
+        if (result.cur_result[0].SUCCESS) {
+          toastr.success('Product updated');
+          $scope.editableProduct = [];
+          $scope.editMode = false;
+          $scope.newProduct = {};
+          $scope.attributes = [];
+          $uibModalInstance.close();
+
+        } else {
+          toastr.error('Some thing went wrong please try again');
+        }
+      });
+   }
+   $scope.gatherData =  function(){
     $('.eachVariant').each(function(i, d){
       var obj = {};
       obj.values = [];
@@ -156,15 +139,20 @@ angular.module('app.dashboard2').controller('productModalInstanceCtrl', function
     $scope.newProduct.attributes = JSON.stringify($scope.attributes);
     $scope.newProduct.companyId= authservice.userSessionData.accountid;
     console.log($scope.newProduct);
-    $.post('/api/catalog/addCatalogItem', $scope.newProduct, function(result) {
+   }
+
+   $scope.saveNewProduct = function(){
+    $scope.gatherData();
+      $.post('/api/catalog/addCatalogItem', $scope.newProduct, function(result) {
         if (result.cur_result[0].SUCCESS) {
           toastr.success('Product Added');
           $scope.newProduct = {};
           $scope.attributes = [];
           $uibModalInstance.close();
-
+          $scope.loadData();
         } else {
           toastr.error('Some thing went wrong please try again');
+          $scope.loadData();
         }
       });
    }
@@ -173,63 +161,64 @@ angular.module('app.dashboard2').controller('productModalInstanceCtrl', function
 
 
 angular.module('app.dashboard2').controller('campaignModalInstanceCtrl', function($rootScope, $uibModal, $uibModalInstance, $scope, $http, $interval, $timeout, $location, $compile, $sce, authservice, toastr, $q) {
-  $timeout(function() {
-    $('form').bootstrapValidator({
-        // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
-        feedbackIcons: {
-          valid: 'glyphicon glyphicon-ok',
-          invalid: 'glyphicon glyphicon-remove',
-          validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-          campaign_name: {
-            validators: {
-              stringLength: {
-                min: 2,
-              },
-              notEmpty: {
-                message: 'Please supply campaign name'
-              },
-              blank: {
-                message: ''
-              }
-            }
-          },
-          introPrompt: {
-            validators: {
-              stringLength: {
-                min: 2,
-              },
-              notEmpty: {
-                message: 'Please supply greeting'
-              },
-              blank: {
-                message: ''
-              }
-            }
-          }
-        }
-      })
-      .on('success.form.bv', function(e) {
-        e.preventDefault();
-        var $form = $(e.target);
-        var bv = $form.data('bootstrapValidator');
-        var form = $form.serialize();
-        form = form + '&companyId=' + authservice.userSessionData.accountid;
-        $.post('/api/catalog/createCampaign', form, function(result) {
-          if (result.cur_result[0].SUCCESS) {
-            toastr.success('Campaign Added');
-            $uibModalInstance.close();
-          } else {
-            toastr.error('Error Adding Campaign');
-            bv.disableSubmitButtons(false);
-          }
-        }, 'json');
-      });
-  }, 2000);
+  
+  $scope.newCampaign = {};
+  
+  $scope.editableCampaign = $scope.$resolve.items ? $scope.$resolve.items : [];
+  
+  if($scope.editableCampaign.length > 0){
+    $scope.editCampaignMode = true;
+  }else{
+    $scope.editCampaignMode = false;
+  }
+  $scope.dispalyCampaign = function(){
+    $scope.newCampaign.campaign_name = $scope.editableCampaign[0].CAMPAIGNNAME;
+    $scope.newCampaign.greeting = $scope.editableCampaign[0].INTROPROMPT;
+    $scope.newCampaign.warrantyPrice = $scope.editableCampaign[0].WARRANTYPRICE;
+    $scope.newCampaign.rushPrice = $scope.editableCampaign[0].RUSHPRICE;
+  }
+  if($scope.editCampaignMode){
+    $scope.dispalyCampaign();
+  }
+
+  $scope.addNewCampaign = function(){
+    $scope.newCampaign.companyId= authservice.userSessionData.accountid;
+    $.post('/api/catalog/createCampaign', $scope.newCampaign, function(result) {
+      if (result.cur_result[0].SUCCESS) {
+        toastr.success('Campaign Added');
+        $uibModalInstance.close();
+      } else {
+        toastr.error('Error Adding Campaign');
+        bv.disableSubmitButtons(false);
+      }
+    });
+  }
+
+  $scope.saveCampaign = function(){
+    $scope.newCampaign.companyId= authservice.userSessionData.accountid;
+    $scope.newCampaign.ID  = $scope.editableCampaign[0].ID;
+
+    $.post('/api/catalog/updateCampaign', $scope.newCampaign, function(result) {
+      if (result.cur_result[0].SUCCESS) {
+        toastr.success('Campaign Updated');
+        $scope.newCampaign = {};
+        $scope.editCampaignMode = false;
+        $scope.editableCampaign = [];
+        $uibModalInstance.close();
+        
+      } else {
+        toastr.error('Error Updating Campaign');
+        
+      }
+    });
+  }
+
   $scope.cancel = function(e) {
     e.preventDefault();
     e.stopPropagation();
+    $scope.newCampaign = {};
+    $scope.editableCampaign = [];
+    $scope.editCampaignMode = false;
     $uibModalInstance.close('cancel');
   };
 });
@@ -301,64 +290,64 @@ angular.module('app.dashboard2').controller('campaignItemModalInstanceCtrl', fun
   };
 });
 
-angular.module('app.dashboard2').controller('phoneNumberModalInstanceCtrl', function($rootScope, $uibModal, $uibModalInstance, $scope, $http, $interval, $timeout, $location, $compile, $sce, authservice, toastr, $q) {
+angular.module('app.dashboard2').controller('phoneNumberModalInstanceCtrl', function ($rootScope, $uibModal, $uibModalInstance, $scope, $http, $interval, $timeout, $location, $compile, $sce, authservice, toastr, $q) {
   $scope.allNumbers = $scope.$resolve.items[0];
   $scope.campaignData = $scope.$resolve.items[1];
   $scope.data = {};
-  
-$scope.getAllCompanyNumbers = function(){
-  $http.get('api/catalog/getCompanyPhoneNumbers', {
-    params: {
-      companyId: authservice.userSessionData.accountid
-    }
-  }).then(function(response){
-    $scope.allNumbers = response.data.phone;
-  });
-}
-  $scope.requestNumber = function(){
+
+  $scope.getAllCompanyNumbers = function () {
+    $http.get('api/catalog/getCompanyPhoneNumbers', {
+      params: {
+        companyId: authservice.userSessionData.accountid
+      }
+    }).then(function (response) {
+      $scope.allNumbers = response.data.phone;
+    });
+  }
+  $scope.requestNumber = function () {
     $http.get('api/catalog/requestPhoneNumber', {
       params: {
         companyId: authservice.userSessionData.accountid
       }
-    }).then(function(response){
-      $scope.getAllCompanyNumbers(); 
+    }).then(function (response) {
+      $scope.getAllCompanyNumbers();
       //$scope.allNumbers.push({DN: response.data.phone[0].DN, CAMPAIGN_NAME: "unassigned", unassigned: true});
     });
   }
-  $scope.releaseNumber = function(number){
+  $scope.releaseNumber = function (number) {
     $http.get('api/catalog/releasePhoneNumber', {
       params: {
         companyId: authservice.userSessionData.accountid,
         number: number.DN
       }
-    }).then(function(response){
-        if(response.data.success){
-          $scope.getAllCompanyNumbers(); 
-        }
+    }).then(function (response) {
+      if (response.data.success) {
+        $scope.getAllCompanyNumbers();
+      }
     });
   }
 
-  $scope.assignNumber = function(number){
-   //console.log($scope.data.campaign);
-   if(!$scope.data.campaign){
-    toastr.error('Pick the campaign to assign');
-    return;
-   }
+  $scope.assignNumber = function (number) {
+    //console.log($scope.data.campaign);
+    if (!$scope.data.campaign) {
+      toastr.error('Pick the campaign to assign');
+      return;
+    }
     $http.get('api/catalog/assignPhoneNumber', {
       params: {
         companyId: authservice.userSessionData.accountid,
         number: number.DN,
         campaignId: $scope.data.campaign
       }
-    }).then(function(response){
-      if(response.data.success){
+    }).then(function (response) {
+      if (response.data.success) {
         $scope.data = {};
         $scope.getAllCompanyNumbers();
       }
     });
-   }
+  }
 
-  $scope.cancel = function(e) {
+  $scope.cancel = function (e) {
     $scope.allNumbers = [];
     $scope.campaignData = [];
     $scope.data = {};
@@ -366,5 +355,5 @@ $scope.getAllCompanyNumbers = function(){
     e.stopPropagation();
     $uibModalInstance.close('cancel');
   };
-  
+
 });

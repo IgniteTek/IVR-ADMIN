@@ -2,13 +2,13 @@
   <h3 class="modal-title" id="modal-title">Add a Campaign</h3>
 </div>'
 <div class="modal-body" style="height:400px;">
-  <form id="product" role="form" novalidate>
+  <form id="product" role="form" novalidate name="campaignForm">
     <div class="form-group">
       <label>Campaign Name</label>
       <div class="inputGroupContainer">
         <div class="input-group">
           <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
-          <input name="campaign_name" type="text" placeholder="Campaign Name" class="form-control" required>
+          <input name="campaign_name" type="text" placeholder="Campaign Name" class="form-control" ng-model="newCampaign.campaign_name" required>
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@
       <div class="inputGroupContainer">
         <div class="input-group">
           <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
-          <input name="greeting" type="text" placeholder="Greeting" class="form-control" required>
+          <input name="greeting" type="text" placeholder="Greeting" class="form-control" ng-model="newCampaign.greeting" required>
         </div>
       </div>
     </div>
@@ -26,7 +26,7 @@
       <div class="inputGroupContainer">
         <div class="input-group">
           <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
-          <input data-bv-excluded name="warrantyPrice" type="number" placeholder="Warranty Price (leave blank for none)" class="form-control" required>
+          <input data-bv-excluded name="warrantyPrice" type="number" placeholder="Warranty Price (leave blank for none)" class="form-control" ng-model="newCampaign.warrantyPrice">
         </div>
       </div>
     </div>
@@ -35,11 +35,12 @@
       <div class="inputGroupContainer">
         <div class="input-group">
           <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
-          <input data-bv-excluded name="rushPrice" type="number" placeholder="Rush Price (leave blank for none)" class="form-control" required>
+          <input data-bv-excluded name="rushPrice" type="number" placeholder="Rush Price (leave blank for none)" class="form-control" ng-model="newCampaign.rushPrice">
         </div>
       </div>
     </div>
-    <button type="submit" id="" class="btn btn-complete btn-cons pull-right">Add Campaign</button>
+    <button class="btn btn-complete btn-cons pull-right" ng-disabled="campaignForm.$invalid" ng-click="addNewCampaign()" ng-show="!editCampaignMode">Add Campaign</button>
+    <button class="btn btn-complete btn-cons pull-right" ng-disabled="campaignForm.$invalid" ng-show="editCampaignMode" ng-click="saveCampaign()">Save Campaign</button>
     <button class="btn btn-warning pull-right" ng-click="cancel($event)">Cancel</button>
   </form>
 </div>

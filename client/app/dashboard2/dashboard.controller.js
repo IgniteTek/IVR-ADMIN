@@ -111,9 +111,9 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       var modalInstance = $uibModal.open($scope.opts);
 
       modalInstance.result.then(function() {
-      //$scope.loadData();
+      $scope.loadData();
         }, function() {
-      //$scope.loadData();
+      $scope.loadData();
       });
     });
   };
@@ -126,6 +126,96 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     .then(function(response) {
       $scope.allCompanyNumbers = response.data.cur_result;
     });
+  }
+  $scope.editproduct = function(){
+    var editable = $scope.gridOptions.api.getSelectedRows();
+    if(editable.length <=0 ){
+      toastr.error("Please select a product to edit");
+      return;
+    }
+    if(editable[0].CANUPDATE != 1){
+      toastr.error("Seleted product is added to live campaign not editable");
+      return;
+    }
+    $scope.opts = {
+      backdrop: true,
+      backdropClick: true,
+      dialogFade: false,
+      keyboard: true,
+      templateUrl: '/dashboard2/productModal.html',
+      controller: 'productModalInstanceCtrl',
+      resolve: {
+        items: function(){
+          return editable;
+        }
+      } // empty storage
+    };
+
+    var modalInstance = $uibModal.open($scope.opts);
+
+    modalInstance.result.then(function() {
+      $scope.loadData();
+    }, function() {
+      $scope.loadData();
+    });
+    //console.log(JSON.parse(editable[0].PRODUCT_VARIANTS));
+    //console.log(editable);
+  }
+  $scope.editCampaign = function(data){
+   var editableCampaign = $scope.gridOptions2.api.getSelectedRows();
+    if(editableCampaign <= 0){
+      toastr.error('Please pick a campaign to edit');
+      return;
+    }
+    if(editableCampaign[0].CAMPAIGNSTATUS == 'L'){
+      toastr.error("Campaign is live. Edit is not possible");
+      return;
+    }
+    $scope.opts = {
+      backdrop: true,
+      backdropClick: true,
+      dialogFade: false,
+      keyboard: true,
+      templateUrl: '/dashboard2/campaignModal.html',
+      controller: 'campaignModalInstanceCtrl',
+      resolve: {
+        items: function(){
+          return editableCampaign;
+        }
+      } 
+    };
+
+    var modalInstance = $uibModal.open($scope.opts);
+
+    modalInstance.result.then(function() {
+      $scope.loadData();
+    }, function() {
+      $scope.loadData();
+    });
+
+  }
+  $scope.goLive = function(id){
+    var details = {
+      campaignId : id,
+      companyId: authservice.userSessionData.accountid
+    };
+    $.post('/api/catalog/activateCampaign', details, function(result) {
+      if (result.success) {
+        toastr.info('Done');
+        $scope.loadData();
+      } else {
+        toastr.error('Error in going live');
+        $scope.loadData();
+      }
+    });
+  }
+
+  $scope.checkLive = function(text){
+    if(text != 'L'){
+      return true;
+    }else{
+      return false;
+    }
   }
   $scope.addCampaignItem = function(campaignId) {
     var Products = $scope.gridOptions.api.getSelectedRows();
@@ -197,17 +287,17 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     headerName: 'Product Name',
     field: 'PRODUCTNAME',
     maxWidth: 500,
-    editable: true
+    
   }, {
     headerName: 'Item Code',
     field: 'PRODUCTCODE',
     maxWidth: 500,
-    editable: true
+    
   }, {
     headerName: 'SKU Code',
     field: 'SKU',
     maxWidth: 500,
-    editable: true
+    
   }];
 
   $scope.gridOptions = {
@@ -251,7 +341,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
   };
 
   var columnDefs2 = [{
-    headerName: 'Row ID',
+    headerName: 'Campaign ID',
     field: 'ID',
     minWidth: 75,
     maxWidth: 100,
@@ -263,7 +353,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     headerName: 'Campaign Name',
     field: 'CAMPAIGNNAME',
     maxWidth: 500,
-    editable: true
+    
   }, {
     headerName: 'Campaign Status',
     field: 'CAMPAIGNSTATUS',
@@ -278,12 +368,12 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     headerName: 'Greeting',
     field: 'INTROPROMPT',
     maxWidth: 500,
-    editable: true
+    
   }, {
     headerName: 'Rush Pricing',
     field: 'RUSHPRICE',
     maxWidth: 500,
-    editable: true,
+    
     valueGetter: function(params) {
       return params.data.RUSHPRICE ? params.data.RUSHPRICE : 'None';
     }
@@ -291,7 +381,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     headerName: 'Warranty Pricing',
     field: 'WARRANTYPRICE',
     maxWidth: 500,
-    editable: true,
+    
     valueGetter: function(params) {
       return params.data.WARRANTYPRICE ? params.data.WARRANTYPRICE : 'None';
     }
@@ -299,6 +389,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
 
   $scope.gridOptions2 = {
     columnDefs: columnDefs2,
+    rowSelection: 'single',
     enableFilter: true,
     cacheQuickFilter: true,
     enableColResize: true,
@@ -490,6 +581,8 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       '       <button ng-click="addCampaignItem(' + params.node.parent.data.ID + ')" tooltip-popup-delay="500" uib-tooltip="Add Campaign Item" class="" style="float: right;margin-left: 30px;">  <span style="" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>' +
       '       <button class="hide"><img src="../images/frost.png"/></button>' +
       '       <button class="hide"><img src="../images/sun.png"/></button>' +
+      '       <button ng-click="goLive(' + params.node.parent.data.ID  + ')" tooltip-popup-delay="500" uib-tooltip="Edit Campaign" style="margin-left: 30px;" ng-show=" '+ $scope.checkLive(params.node.parent.data.CAMPAIGNSTATUS)+' "> Go Live </button>' +
+      '       </button>' +
       '       Products In Campaign <input class="full-width-search" placeholder="Search"/>' +
       '  </div>' +
       '</div>';

@@ -104,8 +104,43 @@ router.post('/updateCampaignItem', function(req, res) {
 
 });
 
+router.post('/activateCampaign', function(req, res) {
+  debugger;
+  var params = [{
+      param: 'v_companyId',
+      value: req.body.companyId
+    },
+    {
+      param: 'v_campaignId',
+      value: req.body.campaignId
+    },
+  ];
+  var cursors = [
+    
+  ];
+
+  db.execProc('SIVR.activateCampaign',
+    params,
+    cursors,
+    function(err, j) {
+      debugger;
+      console.log("got back from activate campaign");
+      var result = {};
+      if(err){
+        result.success = false;
+        res.send(result);
+        return;
+      }else{
+        result.success = true;
+        res.send(result);
+        return;
+      }
+    });
+
+});
 
 router.post('/updateCampaign', function(req, res) {
+  debugger;
   var params = [{
       param: 'v_companyId',
       value: req.body.companyId
@@ -116,19 +151,19 @@ router.post('/updateCampaign', function(req, res) {
     },
     {
       param: 'v_campaignName',
-      value: req.body.CAMPAIGNNAME
+      value: req.body.campaign_name
     },
     {
       param: 'v_introPrompt',
-      value: req.body.INTROPROMPT
+      value: req.body.greeting
     },
     {
       param: 'v_warrantyPrice',
-      value: req.body.WARRANTYPRICE
+      value: req.body.warrantyPrice
     },
     {
       param: 'v_rushPrice',
-      value: req.body.RUSHPRICE
+      value: req.body.rushPrice
     }
   ];
   var cursors = [{
@@ -143,6 +178,7 @@ router.post('/updateCampaign', function(req, res) {
     params,
     cursors,
     function(err, j) {
+      debugger;
       console.log('got back from execdb', j);
       res.json(j);
       return;
@@ -301,15 +337,24 @@ router.post('/updateCatalogItem', function(req, res) {
     },
     {
       param: 'v_productName',
-      value: req.body.PRODUCTNAME
+      value: req.body.product_name
     },
     {
       param: 'v_productCode',
-      value: req.body.PRODUCTCODE
+      value: req.body.item_code
     },
     {
       param: 'v_sku',
-      value: req.body.SKU
+      value: req.body.sku_code
+    },
+    
+    {
+      param: 'v_variant',
+      value: req.body.attributes
+    },
+    {
+      param: 'v_greeting',
+      value: req.body.greeting
     },
   ];
   var cursors = [{
@@ -344,6 +389,7 @@ router.get('/getCatalog', function(req, res) {
     params,
     cursors,
     function(err, j) {
+      debugger;
       //console.log('got back from execdb', j);
       console.log('got back from execdb SIVR.getCompanyCatalog');
       res.json(j);
