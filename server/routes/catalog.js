@@ -185,6 +185,38 @@ router.post('/updateCampaign', function(req, res) {
     });
 
 });
+
+router.post('/updateIVR', function(req, res) {
+  debugger;
+  var params = [
+    {
+      param: 'v_campaignId',
+      value: req.body.ID
+    }
+  ];
+  var cursors = [
+  ];
+
+  db.execProc('SIVR.updateIVR',
+    params,
+    cursors,
+    function(err, j) {
+      debugger;
+      //console.log('got back from execdb', j);
+      if(err){
+        var response={};
+        response.success = false;
+        res.send(response);
+      }else{
+        var response = {};
+        response.success = true;
+        res.send(response);
+      }
+      return;
+    });
+
+});
+
 router.get('/RemoveCampaignItem', function(req, res) {
   var params = [{
       param: 'v_campaignId',

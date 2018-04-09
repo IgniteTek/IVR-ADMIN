@@ -210,6 +210,21 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     });
   }
 
+  $scope.updateIVR = function(id){
+    var details = {
+      ID : id,
+    };
+    $.post('/api/catalog/updateIVR', details, function(result) {
+      if (result.success) {
+        toastr.success('Done');
+        $scope.loadData();
+      } else {
+        toastr.error('Error in Updating please try again');
+        $scope.loadData();
+      }
+    });
+  }
+
   $scope.checkLive = function(text){
     if(text != 'L'){
       return true;
@@ -217,6 +232,11 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       return false;
     }
   }
+  $scope.removeCampaignItem = function(campaignId){
+    
+    $scope.detailGridOptions.api.getSelectedRows();
+  }
+
   $scope.addCampaignItem = function(campaignId) {
     var Products = $scope.gridOptions.api.getSelectedRows();
     if (Products.length == 0) {
@@ -517,6 +537,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       enableSorting: true,
       enableFilter: true,
       enableColResize: true,
+      rowSelection: 'single',
       rowData: items,
       columnDefs: productDetailColumnDefs,
       onGridReady: function(params) {
@@ -578,11 +599,12 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       '  <div class="full-width-grid"></div>' +
       '  <div class="full-width-grid-toolbar">' +
       '       <img class="hide full-width-phone-icon" src="../images/phone.png"/>' +
+      '       <button ng-click="removeCampaignItem(' + params.node.parent.data.ID + ')" tooltip-popup-delay="500" uib-tooltip="Remove Campaign Item" class="" style="float: right; margin-left: 30px;" ng-show=" false ">  <span style="" class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>' +
       '       <button ng-click="addCampaignItem(' + params.node.parent.data.ID + ')" tooltip-popup-delay="500" uib-tooltip="Add Campaign Item" class="" style="float: right;margin-left: 30px;">  <span style="" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>' +
       '       <button class="hide"><img src="../images/frost.png"/></button>' +
       '       <button class="hide"><img src="../images/sun.png"/></button>' +
-      '       <button ng-click="goLive(' + params.node.parent.data.ID  + ')" tooltip-popup-delay="500" uib-tooltip="Edit Campaign" style="margin-left: 30px;" ng-show=" '+ $scope.checkLive(params.node.parent.data.CAMPAIGNSTATUS)+' "> Go Live </button>' +
-      '       </button>' +
+      '       <button ng-click="goLive(' + params.node.parent.data.ID  + ')" style="margin-left: 30px;" ng-show=" '+ $scope.checkLive(params.node.parent.data.CAMPAIGNSTATUS)+' "> Go Live </button>' +
+      '       <button ng-click="updateIVR(' + params.node.parent.data.ID  + ')" style="margin-left: 30px;"> Update IVR </button>' +
       '       Products In Campaign <input class="full-width-search" placeholder="Search"/>' +
       '  </div>' +
       '</div>';
