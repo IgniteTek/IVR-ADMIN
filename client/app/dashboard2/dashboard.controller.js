@@ -234,7 +234,22 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
   }
   $scope.removeCampaignItem = function(campaignId){
     
-    $scope.detailGridOptions.api.getSelectedRows();
+    console.log($scope.detailGridOptions.api.getSelectedRows());
+    var selectedRow = $scope.detailGridOptions.api.getSelectedRows()[0];
+    $http.get('api/catalog/RemoveCampaignItem', {
+      params: {
+        campaignId: campaignId,
+        catalogId: selectedRow.CATALOGID
+      }
+    })
+    .then(function(response) {
+      if(response.data.success){
+        toastr.info('Campaign item removed');
+        $scope.loadData();
+      }else{
+        toastr.error('Error please try again');
+      }
+    });
   }
 
   $scope.addCampaignItem = function(campaignId) {
@@ -533,7 +548,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
 
   campaignPanelProductCellRenderer.prototype.setupDetailGrid = function(items, phone,status,campaign) {
     this.status=status;
-    this.detailGridOptions = {
+    $scope.detailGridOptions = {
       enableSorting: true,
       enableFilter: true,
       enableColResize: true,
@@ -573,7 +588,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     };
 
     var eDetailGrid = this.eGui.querySelector('.full-width-grid');
-    new agGrid.Grid(eDetailGrid, this.detailGridOptions);
+    new agGrid.Grid(eDetailGrid, $scope.detailGridOptions);
     this.detailGridOptions2 = {
       enableSorting: true,
       enableFilter: true,
@@ -599,7 +614,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       '  <div class="full-width-grid"></div>' +
       '  <div class="full-width-grid-toolbar">' +
       '       <img class="hide full-width-phone-icon" src="../images/phone.png"/>' +
-      '       <button ng-click="removeCampaignItem(' + params.node.parent.data.ID + ')" tooltip-popup-delay="500" uib-tooltip="Remove Campaign Item" class="" style="float: right; margin-left: 30px;" ng-show=" false ">  <span style="" class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>' +
+      '       <button ng-click="removeCampaignItem(' + params.node.parent.data.ID + ')" tooltip-popup-delay="500" uib-tooltip="Remove Campaign Item" class="" style="float: right; margin-left: 30px;" ng-show=" true ">  <span style="" class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>' +
       '       <button ng-click="addCampaignItem(' + params.node.parent.data.ID + ')" tooltip-popup-delay="500" uib-tooltip="Add Campaign Item" class="" style="float: right;margin-left: 30px;">  <span style="" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>' +
       '       <button class="hide"><img src="../images/frost.png"/></button>' +
       '       <button class="hide"><img src="../images/sun.png"/></button>' +
@@ -617,13 +632,18 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
   };
 
   campaignPanelProductCellRenderer.prototype.destroy = function() {
-    this.detailGridOptions.api.destroy();
+    if($scope.detailGridOptions){
+      $scope.detailGridOptions.api.destroy();
+    }
+    
     this.detailGridOptions2.api.destroy();
   };
+  
+  
 
   campaignPanelProductCellRenderer.prototype.addSeachFeature = function() {
     var tfSearch = this.eGui.querySelector('.full-width-search');
-    var gridApi = this.detailGridOptions.api;
+    var gridApi = $scope.detailGridOptions.api;
 
     var searchListener = function() {
       var filterText = tfSearch.value;

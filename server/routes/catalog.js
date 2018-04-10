@@ -218,6 +218,7 @@ router.post('/updateIVR', function(req, res) {
 });
 
 router.get('/RemoveCampaignItem', function(req, res) {
+  debugger;
   var params = [{
       param: 'v_campaignId',
       value: req.query.campaignId
@@ -239,9 +240,17 @@ router.get('/RemoveCampaignItem', function(req, res) {
     params,
     cursors,
     function(err, j) {
-      console.log('got back from execdb', j);
-      res.json(j);
-      return;
+      debugger;
+      //console.log('got back from execdb', j);
+      if(err){
+       var response = {};
+        response.success = false;
+        res.send(response);
+      }else{
+        var response = {};
+        response.success = true;
+        res.send(response);
+      }
     });
 
 });
