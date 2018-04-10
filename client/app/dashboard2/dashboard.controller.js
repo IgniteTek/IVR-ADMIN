@@ -233,13 +233,18 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     }
   }
   $scope.removeCampaignItem = function(campaignId){
-    
-    console.log($scope.detailGridOptions.api.getSelectedRows());
-    var selectedRow = $scope.detailGridOptions.api.getSelectedRows()[0];
+
+    //var detailGridInfo = $scope.gridOptions2.api.getDetailGridInfo('detailGridOptions');
+    //console.log($scope.detailGridOptions.api.getSelectedRows());
+    var selectedRow = $scope.detailGridOptions.api.getSelectedRows();
+    if(selectedRow.length <= 0){
+      toastr.error('Pick the campaign item to remove');
+      return;
+    }
     $http.get('api/catalog/RemoveCampaignItem', {
       params: {
         campaignId: campaignId,
-        catalogId: selectedRow.CATALOGID
+        catalogId: selectedRow[0].CATALOGID
       }
     })
     .then(function(response) {
@@ -342,6 +347,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     rowDeselection: true,
     headerHeight: 28,
     rowHeight: 33,
+    masterDetail: true,
     onViewportChanged: function() {
       $scope.gridOptions.api.sizeColumnsToFit();
     },
@@ -526,7 +532,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
   }];
 
   function campaignPanelProductCellRenderer() {}
-
+  
   campaignPanelProductCellRenderer.prototype.init = function(params) {
     // trick to convert string of html into dom object
     var self = this;
@@ -540,6 +546,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
         }
       })
       .then(function(response) {
+        
         self.setupDetailGrid(response.data.catalog, response.data.phone,params.node.parent.data.CAMPAIGNSTATUS,params.node.parent.data.ID);
         self.consumeMouseWheelOnDetailGrid();
         self.addSeachFeature();
@@ -589,7 +596,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
 
     var eDetailGrid = this.eGui.querySelector('.full-width-grid');
     new agGrid.Grid(eDetailGrid, $scope.detailGridOptions);
-    this.detailGridOptions2 = {
+    $scope.detailGridOptions2 = {
       enableSorting: true,
       enableFilter: true,
       enableColResize: true,
@@ -603,7 +610,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     };
 
     eDetailGrid = this.eGui.querySelector('.full-width-details');
-    new agGrid.Grid(eDetailGrid, this.detailGridOptions2);
+    new agGrid.Grid(eDetailGrid, $scope.detailGridOptions2);
   };
 
   campaignPanelProductCellRenderer.prototype.getTemplate = function(params) {
@@ -614,7 +621,7 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
       '  <div class="full-width-grid"></div>' +
       '  <div class="full-width-grid-toolbar">' +
       '       <img class="hide full-width-phone-icon" src="../images/phone.png"/>' +
-      '       <button ng-click="removeCampaignItem(' + params.node.parent.data.ID + ')" tooltip-popup-delay="500" uib-tooltip="Remove Campaign Item" class="" style="float: right; margin-left: 30px;" ng-show=" true ">  <span style="" class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>' +
+      '       <button ng-click="removeCampaignItem(' + params.node.parent.data.ID + ')" tooltip-popup-delay="500" uib-tooltip="Remove Campaign Item" class="" style="float: right; margin-left: 30px;" ng-show=" '+ $scope.checkLive(params.node.parent.data.CAMPAIGNSTATUS)+' ">  <span style="" class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>' +
       '       <button ng-click="addCampaignItem(' + params.node.parent.data.ID + ')" tooltip-popup-delay="500" uib-tooltip="Add Campaign Item" class="" style="float: right;margin-left: 30px;">  <span style="" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>' +
       '       <button class="hide"><img src="../images/frost.png"/></button>' +
       '       <button class="hide"><img src="../images/sun.png"/></button>' +
@@ -632,11 +639,16 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
   };
 
   campaignPanelProductCellRenderer.prototype.destroy = function() {
-    if($scope.detailGridOptions){
+    $scope.gridOptions.api.refreshCells();
+    if($scope.detailGridOptions.api){
       $scope.detailGridOptions.api.destroy();
+      $scope.detailGridOptions2.api.destroy();
+      
+    }else{
+      $scope.loadData();
     }
     
-    this.detailGridOptions2.api.destroy();
+    
   };
   
   
