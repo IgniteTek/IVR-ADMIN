@@ -416,7 +416,8 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     maxWidth: 500,
     
     valueGetter: function(params) {
-      return params.data.RUSHPRICE ? params.data.RUSHPRICE : 'None';
+      var rushPrice = params.data.RUSHPRICE ? params.data.RUSHPRICE.toFixed(2): null;
+      return params.data.RUSHPRICE ? rushPrice : 'None';
     }
   }, {
     headerName: 'Warranty Pricing',
@@ -424,7 +425,8 @@ angular.module('app.dashboard2').directive('bindHtmlCompile', ['$compile',
     maxWidth: 500,
     
     valueGetter: function(params) {
-      return params.data.WARRANTYPRICE ? params.data.WARRANTYPRICE : 'None';
+      var warrantyPrice = params.data.WARRANTYPRICE ? params.data.WARRANTYPRICE.toFixed(2): null;
+      return params.data.WARRANTYPRICE ? warrantyPrice : 'None';
     }
   }];
 

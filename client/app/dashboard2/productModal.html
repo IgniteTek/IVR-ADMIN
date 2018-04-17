@@ -5,10 +5,13 @@
   <form id="product" role="form" novalidate name="ProductForm">
     <div class="form-group">
       <label>Product Name</label>
-      <div class="inputGroupContainer">
-        <div class="input-group">
-          <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+      <div class="inputGroupContainer col-sm-12">
+        <div class=" col-sm-6">
           <input name="product_name" type="text" placeholder="Product Name" class="form-control" ng-model="newProduct.product_name" required>
+          
+        </div>
+        <div class="col-sm-6">
+            <input name="product_name" type="text" placeholder="Acceptable Pronunciation" class="form-control" ng-model="newProduct.productTTS">
         </div>
       </div>
     </div>
@@ -31,12 +34,8 @@
       </div>
     </div>
     <div class="form-group">
-      <label>Greetings</label>
-      <div class="inputGroupContainer">
-        <div class="input-group">
-          <input name="" type="text" placeholder="Greeting text" class="form-control" ng-model="newProduct.greeting" required>
-        </div>
-      </div>
+      <label>Greetings</label><br>
+          <textarea name="" id="" placeholder="eg: Customize your iphone" class="form-control" rows="4" ng-model="newProduct.greeting" required></textarea>
     </div>
     <div class="form-group" ng-repeat="variant in variants track by $index">
       <div class="eachVariant">
@@ -45,22 +44,28 @@
           <span class="glyphicon glyphicon-minus-sign" tooltip-popup-delay="500" uib-tooltip="Remove Variant" aria-hidden="true" ng-show="$last && !$first" ng-click="removeVariant()"></span>
           <div class="inputGroupContainer col-sm-12">
             <div class="input-group">
-              <input name="" type="text" placeholder=" eg. Color" class="form-control eachVariantName">
-              <input name="" type="text" placeholder="Variant Prompt" class="form-control eachVariantPromt">
+              <input name="" type="text" placeholder=" eg. Color, Model" class="form-control eachVariantName">
+              <textarea name="" id="" rows="2" class="form-control eachVariantPromt" style="margin-top: 2px;" placeholder="Variant Prompt"></textarea>
+              <textarea name="" id="" rows="2" class="form-control eachVariantPromtInto" style="margin-top: 2px;" placeholder="Variant Prompt Into"></textarea>
+              <textarea name="" id="" rows="2" class="form-control eachVariantPromtOutr" style="margin-top: 2px;" placeholder="Variant Prompt Outer"></textarea>
+              <!-- <input name="" type="text" placeholder="Variant Prompt" class="form-control eachVariantPromt" required>
+              <input name="" type="text" placeholder="Variant Prompt Into" class="form-control eachVariantPromtInto" required>
+              <input name="" type="text" placeholder="Variant Prompt Outer" class="form-control eachVariantPromtOutr" required> -->
               <div class="inputGroupContainer col-sm-12" ng-repeat="value in variant.values track by $index">
                 <div class="eachVariantValues">
                     <label style="margin-right:8px;">Values</label>
                     <span class="glyphicon glyphicon-plus-sign" tooltip-popup-delay="500" uib-tooltip="Add Value" aria-hidden="true" ng-show="$last" ng-click="addNewValue(variant.id)"></span>
-                    <span class="glyphicon glyphicon-minus-sign" tooltip-popup-delay="500" uib-tooltip="Remove Value" aria-hidden="true" ng-show="$last && !$first" ng-click="removeValue(variant.id)"></span>
+                    <span class="glyphicon glyphicon-minus-sign" tooltip-popup-delay="500" uib-tooltip="Remove Value" aria-hidden="true" ng-show="$last && !$first" ng-click="removeValue(variant.id)"></span><br>
+                    <label>(Enter the acceptable pronunciation of value seperated with a comma.) </label>
                     <div>
-                        <input name="" type="text" placeholder="Val" class="form-control eachVariantValue">
+                        <input name="" type="text" placeholder="eg: Iphone x, Eye Phone x, Iphone 10, Eye Phone 10" class="form-control eachVariantValue" required>
                     </div>
                     <div class="col-sm-12">
-                      <div class="col-sm-6">
+                      <!-- <div class="col-sm-6">
                           <input name="" type="text" placeholder="Sku Code" class="form-control eachVariantSku">
-                      </div>
-                      <div class="col-sm-6">
-                          <input name="" type="text" placeholder="Sku -suffix" class="form-control eachVariantSkuSuffix">
+                      </div> -->
+                      <div class="">
+                          <input name="" type="text" placeholder="Sku -suffix" class="form-control eachVariantSkuSuffix" required>
                       </div>
                     </div>
                 </div>

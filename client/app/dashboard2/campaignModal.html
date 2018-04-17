@@ -14,31 +14,67 @@
     </div>
     <div class="form-group">
       <label>Greeting</label>
+          <textarea name="" id="" rows="4" placeholder="Greeting" class="form-control" ng-model="newCampaign.greeting" required></textarea>
+    </div>
+    <div class="form-group">
+        <label>Status Greeting</label>
+            <textarea name="" id="" rows="4" placeholder="Status Greeting" class="form-control" ng-model="newCampaign.statusGreeting" required></textarea>
+      </div>
+      <div class="form-group">
+          <label>Information Greeting</label>
+              <textarea name="" id="" rows="4" placeholder=" Outer Greeting" class="form-control" ng-model="newCampaign.InformationGreeting" required></textarea>
+        </div>
+    <!-- <div class="form-group">
       <div class="inputGroupContainer">
         <div class="input-group">
           <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
           <input name="greeting" type="text" placeholder="Greeting" class="form-control" ng-model="newCampaign.greeting" required>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="form-group">
       <label>Warranty Price - leave blank for none</label>
       <div class="inputGroupContainer">
         <div class="input-group">
-          <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
-          <input data-bv-excluded name="warrantyPrice" type="number" placeholder="Warranty Price (leave blank for none)" class="form-control" ng-model="newCampaign.warrantyPrice">
+          <input data-bv-excluded name="warrantyPrice" type="number" placeholder="Warranty Price (leave blank for none)" class="form-control" ng-model="newCampaign.warrantyPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" >
         </div>
+      </div>
+      <div ng-if="newCampaign.warrantyPrice">
+          <label>Warranty Price Prompt</label>
+          <textarea name="" id="" rows="4" placeholder=" warranty Greeting" class="form-control" ng-model="newCampaign.warrantyGreeting" required></textarea>
+      </div>
+      <div ng-if="newCampaign.warrantyPrice">
+        <label>Warranty Price per-unit</label><br>
+          <label>
+              <input type="radio" ng-model="newCampaign.warrantyPerUnit" value="Y" required>
+              Yes
+            </label><br/>
+            <label>
+              <input type="radio" ng-model="newCampaign.warrantyPerUnit" value="N" required>
+              No
+            </label><br/>
       </div>
     </div>
     <div class="form-group">
       <label>Rush Price - leave blank for none</label>
       <div class="inputGroupContainer">
         <div class="input-group">
-          <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
-          <input data-bv-excluded name="rushPrice" type="number" placeholder="Rush Price (leave blank for none)" class="form-control" ng-model="newCampaign.rushPrice">
+          <input data-bv-excluded name="rushPrice" type="number" placeholder="Rush Price (leave blank for none)" class="form-control" ng-model="newCampaign.rushPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" >
         </div>
       </div>
+      <div ng-if="newCampaign.rushPrice">
+          <label>Rush Price Prompt</label>
+          <textarea name="" id="" rows="4" placeholder=" Rush price Greeting" class="form-control" ng-model="newCampaign.rushPriceGreeting" required></textarea>
+      </div>
     </div>
+    <div class="form-group">
+        <label>List Intro Prompt</label>
+            <textarea name="" id="" rows="4" placeholder="List Intro Greeting" class="form-control" ng-model="newCampaign.listIntroGreeting" required></textarea>
+      </div>
+      <div class="form-group">
+          <label>List Outro Prompt</label>
+              <textarea name="" id="" rows="4" placeholder="List Outro Greeting" class="form-control" ng-model="newCampaign.listOutroGreeting" required></textarea>
+        </div>
     <button class="btn btn-complete btn-cons pull-right" ng-disabled="campaignForm.$invalid" ng-click="addNewCampaign()" ng-show="!editCampaignMode">Add Campaign</button>
     <button class="btn btn-complete btn-cons pull-right" ng-disabled="campaignForm.$invalid" ng-show="editCampaignMode" ng-click="saveCampaign()">Save Campaign</button>
     <button class="btn btn-warning pull-right" ng-click="cancel($event)">Cancel</button>

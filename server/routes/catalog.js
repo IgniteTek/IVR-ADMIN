@@ -41,7 +41,35 @@ router.post('/createCampaign', function(req, res) {
     {
       param: 'v_rushPrice',
       value: req.body.rushPrice
-    }
+    },
+    {
+      param: 'v_statusPrompt',
+      value: req.body.statusGreeting
+    },
+    {
+      param: 'v_infoPrompt',
+      value: req.body.InformationGreeting
+    },
+    {
+      param: 'v_warrantyPrompt',
+      value: req.body.warrantyGreeting
+    },
+    {
+      param: 'v_warrantyPerProduct',
+      value: req.body.warrantyPerUnit
+    },
+    {
+      param: 'v_rushPrompt',
+      value: req.body.rushPriceGreeting
+    },
+    {
+      param: 'v_listIntroPrompt',
+      value: req.body.listIntroGreeting
+    },
+    {
+      param: 'v_listOutroPrompt',
+      value: req.body.listOutroGreeting
+    },
   ];
   var cursors = [{
       cursor: 'cur_result'
@@ -164,7 +192,35 @@ router.post('/updateCampaign', function(req, res) {
     {
       param: 'v_rushPrice',
       value: req.body.rushPrice
-    }
+    },
+    {
+      param: 'v_statusPrompt',
+      value: req.body.statusGreeting
+    },
+    {
+      param: 'v_infoPrompt',
+      value: req.body.InformationGreeting
+    },
+    {
+      param: 'v_warrantyPrompt',
+      value: req.body.warrantyGreeting
+    },
+    {
+      param: 'v_warrantyPerProduct',
+      value: req.body.warrantyPerUnit
+    },
+    {
+      param: 'v_rushPrompt',
+      value: req.body.rushPriceGreeting
+    },
+    {
+      param: 'v_listIntroPrompt',
+      value: req.body.listIntroGreeting
+    },
+    {
+      param: 'v_listOutroPrompt',
+      value: req.body.listOutroGreeting
+    },
   ];
   var cursors = [{
       cursor: 'cur_result'
@@ -312,6 +368,10 @@ router.post('/addCatalogItem', function(req, res) {
     param: 'v_prompt',
     value: req.body.greeting
   },
+  {
+    param: 'v_tts',
+    value: req.body.productTTS
+  },
   
 ];
 var cursors = [{
@@ -368,6 +428,7 @@ db.execProc('SIVR.addCatalogItem',
 
 });*/
 router.post('/updateCatalogItem', function(req, res) {
+  debugger;
   var params = [{
       param: 'v_catalogId',
       value: req.body.ID
@@ -396,6 +457,10 @@ router.post('/updateCatalogItem', function(req, res) {
     {
       param: 'v_greeting',
       value: req.body.greeting
+    },
+    {
+      param: 'v_tts',
+      value: req.body.productTTS
     },
   ];
   var cursors = [{

@@ -37,17 +37,23 @@ angular.module('app.dashboard2').controller('productModalInstanceCtrl', function
 
   $scope.displayProduct = function(){
     $scope.newProduct.product_name = $scope.editableProduct[0].PRODUCTNAME;
+    $scope.newProduct.productTTS = $scope.editableProduct[0].PRODUCT_TTS;
     $scope.newProduct.item_code = $scope.editableProduct[0].PRODUCTCODE;
     $scope.newProduct.greeting = $scope.editableProduct[0].PRODUCT_PROMPT;
     $scope.newProduct.sku_code = $scope.editableProduct[0].SKU;
     $('.eachVariant').each(function(i, d){
       $(d).children().find('.eachVariantName').val($scope.variants[i].name);
       $(d).children().find('.eachVariantPromt').val($scope.variants[i].prompt);
+      $(d).children().find('.eachVariantPromtInto').val($scope.variants[i].prompt_intro);
+      $(d).children().find('.eachVariantPromtOutr').val($scope.variants[i].prompt_outro);
       var eachValueChild = $(d).children().find('.eachVariantValues');
       eachValueChild.each(function (j, e) {
-        $(e).children().find('.eachVariantValue').val($scope.variants[i].values[j].val);
-        $(e).children().find('.eachVariantSku').val("");
-        $(e).children().find('.eachVariantSkuSuffix').val($scope.variants[i].values[j].sku_siffix)
+        if($scope.variants[i].values[j].valueTTSArray){
+          $(e).children().find('.eachVariantValue').val($scope.variants[i].values[j].valueTTSArray.join());
+        }else{
+          $(e).children().find('.eachVariantValue').val($scope.variants[i].values[j].val);
+        }
+        $(e).children().find('.eachVariantSkuSuffix').val($scope.variants[i].values[j].sku_suffix)
       });
     });
 
@@ -104,6 +110,10 @@ angular.module('app.dashboard2').controller('productModalInstanceCtrl', function
    
    $scope.editProduct = function(){
     $scope.gatherData();
+    if(!$scope.attributes[0].name){
+      toastr.error("Should have atleast one variant for the product");
+      return;
+    }
     $scope.newProduct.ID = $scope.editableProduct[0].ID;
 
     $.post('/api/catalog/updateCatalogItem', $scope.newProduct, function(result) {
@@ -126,33 +136,51 @@ angular.module('app.dashboard2').controller('productModalInstanceCtrl', function
       obj.values = [];
       obj.name =  $(d).children().find('.eachVariantName').val();
       obj.prompt = $(d).children().find('.eachVariantPromt').val();
+      obj.prompt_intro = $(d).children().find('.eachVariantPromtInto').val();
+      obj.prompt_outro = $(d).children().find('.eachVariantPromtOutr').val();
       var eachValueChild = $(d).children().find('.eachVariantValues');
       eachValueChild.each(function (i, e) {
+        
+        var allValues =  $(e).children().find('.eachVariantValue').val();
+        var valueTTSArray = allValues.split(',');
         obj.values.push({
-          val: $(e).children().find('.eachVariantValue').val(),
-          sku: $(e).children().find('.eachVariantSku').val(),
-          sku_siffix: $(e).children().find('.eachVariantSkuSuffix').val()
+          val: valueTTSArray[0],
+          //sku: $(e).children().find('.eachVariantSku').val(),
+          sku_suffix: $(e).children().find('.eachVariantSkuSuffix').val(),
+          valueTTSArray: valueTTSArray
         })
       });
       $scope.attributes.push(obj);
     });
     $scope.newProduct.attributes = JSON.stringify($scope.attributes);
+    /*if($scope.newProduct.greeting.indexOf("(") != -1){
+      var re = /\((.*)\)/;
+      $scope.newProduct.productTTS = $scope.newProduct.greeting.match(re)[1];
+      $scope.newProduct.greeting = $scope.newProduct.greeting.slice(0, $scope.newProduct.greeting.indexOf("("));
+    }else{
+      $scope.newProduct.productTTS = "";
+    }*/
     $scope.newProduct.companyId= authservice.userSessionData.accountid;
-    console.log($scope.newProduct);
+    return $scope.newProduct;
    }
 
    $scope.saveNewProduct = function(){
     $scope.gatherData();
+    $scope.newProduct;
+    if(!$scope.attributes[0].name){
+      toastr.error("Should have atleast one variant for the product");
+      return;
+    }
       $.post('/api/catalog/addCatalogItem', $scope.newProduct, function(result) {
         if (result.cur_result[0].SUCCESS) {
           toastr.success('Product Added');
           $scope.newProduct = {};
           $scope.attributes = [];
           $uibModalInstance.close();
-          $scope.loadData();
+          //$scope.loadData();
         } else {
           toastr.error('Some thing went wrong please try again');
-          $scope.loadData();
+          //$scope.loadData();
         }
       });
    }
@@ -176,6 +204,13 @@ angular.module('app.dashboard2').controller('campaignModalInstanceCtrl', functio
     $scope.newCampaign.greeting = $scope.editableCampaign[0].INTROPROMPT;
     $scope.newCampaign.warrantyPrice = $scope.editableCampaign[0].WARRANTYPRICE;
     $scope.newCampaign.rushPrice = $scope.editableCampaign[0].RUSHPRICE;
+    $scope.newCampaign.statusGreeting = $scope.editableCampaign[0].STATUSPROMPT;
+    $scope.newCampaign.InformationGreeting = $scope.editableCampaign[0].INFOPROMPT;
+    $scope.newCampaign.warrantyGreeting = $scope.editableCampaign[0].WARRANTYPROMPT;
+    $scope.newCampaign.warrantyPerUnit = $scope.editableCampaign[0].WARRANTYPERPRODUCT;
+    $scope.newCampaign.rushPriceGreeting = $scope.editableCampaign[0].RUSHPROMPT;
+    $scope.newCampaign.listIntroGreeting = $scope.editableCampaign[0].LISTINTROPROMPT;
+    $scope.newCampaign.listOutroGreeting = $scope.editableCampaign[0].LISTOUTROPROMPT;
   }
   if($scope.editCampaignMode){
     $scope.dispalyCampaign();
