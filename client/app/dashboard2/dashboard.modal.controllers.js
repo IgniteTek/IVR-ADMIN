@@ -110,10 +110,6 @@ angular.module('app.dashboard2').controller('productModalInstanceCtrl', function
    
    $scope.editProduct = function(){
     $scope.gatherData();
-    if(!$scope.attributes[0].name){
-      toastr.error("Should have atleast one variant for the product");
-      return;
-    }
     $scope.newProduct.ID = $scope.editableProduct[0].ID;
 
     $.post('/api/catalog/updateCatalogItem', $scope.newProduct, function(result) {
@@ -167,10 +163,6 @@ angular.module('app.dashboard2').controller('productModalInstanceCtrl', function
    $scope.saveNewProduct = function(){
     $scope.gatherData();
     $scope.newProduct;
-    if(!$scope.attributes[0].name){
-      toastr.error("Should have atleast one variant for the product");
-      return;
-    }
       $.post('/api/catalog/addCatalogItem', $scope.newProduct, function(result) {
         if (result.cur_result[0].SUCCESS) {
           toastr.success('Product Added');
